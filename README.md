@@ -1,1 +1,199 @@
-# homiessmp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f9fa">
+<title>Homies | SMP — Wiki</title>
+<style>
+:root{--bg:#f8f9fa;--paper:#fff;--ink:#202122;--muted:#54595d;--line:#a2a9b1;--soft:#eaecf0;--link:#36c;--linkv:#795cb2;--accent:#3366cc;--green:#14866d;--shadow:0 1px 3px #20212218}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}
+.top{height:66px;background:#fff;border-bottom:1px solid var(--soft);display:flex;align-items:center;gap:20px;padding:0 max(22px,calc((100vw - 1450px)/2));position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px;min-width:250px;color:var(--ink)}.brand:hover{text-decoration:none}.brandmark{width:39px;height:39px;border-radius:50%;background:#253858;color:#fff;display:grid;place-items:center;font:900 20px Georgia,serif}.brandname{font:20px Georgia,serif;line-height:1.1}.brandname small{display:block;font:10px Arial,sans-serif;letter-spacing:1.4px;color:#72777d;text-transform:uppercase;margin-top:4px}
+.search{margin-left:auto;position:relative;width:min(390px,38vw)}.search input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:2px;background:#fff;outline:none}.search input:focus{border:2px solid var(--link);padding:8px 11px 8px 35px}.search span{position:absolute;left:11px;top:5px;color:#72777d;font-size:18px}
+.shell{max-width:1450px;margin:auto;display:grid;grid-template-columns:205px minmax(0,1fr);gap:30px;padding:25px 24px 65px}.sidebar{position:sticky;top:88px;align-self:start;border-right:1px solid var(--soft);padding:5px 16px 20px 0;max-height:calc(100vh - 105px);overflow:auto}.sidehead{font-size:11px;color:#72777d;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin:12px 0 7px 9px}.sidebtn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border:0;background:transparent;color:var(--link);text-align:left;cursor:pointer;border-radius:2px;font-size:13px}.sidebtn:hover{background:#eaecf0;text-decoration:none}.sidebtn.active{background:#eaf3ff;color:#202122;font-weight:700;border-left:3px solid var(--accent);padding-left:6px}.sideicon{width:17px;color:#72777d;text-align:center}
+main{min-width:0}.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 19px;overflow:auto}.tab{padding:8px 14px;color:var(--link);white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:0;border-left:0;border-right:0}.tab:hover{background:#eaecf0;text-decoration:none}.tab.active{color:var(--ink);border-bottom-color:#202122;font-weight:700}
+.page{display:none}.page.active{display:block}.page-title{font:normal 31px/1.25 Georgia,"Times New Roman",serif;border-bottom:1px solid var(--line);padding:0 0 8px;margin:0 0 13px}.subtitle{color:#72777d;font-size:12px;margin:-5px 0 18px}.lead{font-size:15px;line-height:1.75;margin:0 0 16px}.lead strong{font-weight:700}
+.infobox{float:right;width:285px;margin:0 0 18px 22px;border:1px solid var(--line);background:#f8f9fa;padding:9px;font-size:12px;box-shadow:var(--shadow)}.infobox h3{font: bold 16px Georgia,serif;text-align:center;margin:2px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}.infobox .infopic{height:84px;display:grid;place-items:center;background:linear-gradient(135deg,#dce8f5,#f2f5f8);font-size:34px;margin-bottom:8px}.infobox table{width:100%;border-collapse:collapse}.infobox td{padding:5px 4px;border-top:1px solid #eaecf0;vertical-align:top}.infobox td:first-child{font-weight:700;width:39%}
+.toc{float:left;width:245px;background:#f8f9fa;border:1px solid var(--line);padding:10px 13px;margin:0 18px 15px 0;font-size:12px}.toc h3{font-size:13px;text-align:center;margin:0 0 6px}.toc ol{margin:0;padding-left:22px}.toc a{color:var(--link)}h2.section{font:normal 22px Georgia,serif;border-bottom:1px solid var(--soft);padding-bottom:4px;margin:26px 0 10px;clear:none}h3.subsection{font:normal 17px Georgia,serif;margin:18px 0 6px}
+p{margin:9px 0}.muted{color:#72777d}.note{background:#f8f9fa;border:1px solid var(--soft);padding:10px 13px;margin:13px 0;font-size:12px}.notice{border-left:3px solid #6b9fce;background:#f2f7fc;padding:10px 13px;margin:15px 0;font-size:13px}
+.timeline{border-left:2px solid #c8ccd1;margin:13px 0 22px 8px;padding-left:18px}.event{position:relative;padding:8px 10px 9px;margin:0 0 7px;border:1px solid transparent;border-radius:2px}.event:before{content:"";position:absolute;width:8px;height:8px;background:#6b9fce;border:2px solid #fff;box-shadow:0 0 0 1px #6b9fce;border-radius:50%;left:-24px;top:16px}.event:hover{background:#f8f9fa;border-color:var(--soft)}.event strong{font-weight:650}.event .date{font-size:11px;color:#72777d;display:block}.event p{margin:2px 0 0}.event.hide{display:none}.event-link{display:block;color:inherit}.event-link:hover{text-decoration:none}.event-link strong{color:var(--link)}.article-image{display:block;max-width:100%;height:auto;max-height:560px;object-fit:contain;margin:14px auto 5px;border:1px solid var(--soft);background:#f8f9fa}.image-caption{text-align:center;color:#72777d;font-size:12px;margin:0 0 18px}.event-article .lead{max-width:900px}
+.cardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}.wiki-card{border:1px solid var(--line);background:#fff;padding:14px 15px;min-height:110px;box-shadow:var(--shadow)}.wiki-card h3{font:normal 17px Georgia,serif;margin:0 0 4px}.wiki-card p{font-size:12px;color:#54595d;margin:0}.tag{display:inline-block;font-size:10px;padding:2px 6px;background:#eaecf0;color:#54595d;margin:7px 4px 0 0}.tag.green{background:#e5f5ef;color:#176b54}.tag.red{background:#fce8e6;color:#a33}
+table.wikitable{border:1px solid var(--line);border-collapse:collapse;background:#f8f9fa;width:100%;font-size:13px;margin:12px 0}table.wikitable th,table.wikitable td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}table.wikitable th{background:#eaecf0}table.wikitable tr:nth-child(even) td{background:#fff}
+.back{font-size:12px;margin:0 0 10px;display:inline-block}.search-results{display:none;border:1px solid var(--line);background:#fff;padding:10px;margin:0 0 15px}.search-results a{display:block;padding:4px 2px}.search-results.show{display:block}
+.footer{border-top:1px solid var(--soft);margin-top:35px;padding:12px 0;color:#72777d;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:15px;padding:15px}.sidebar{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--soft);display:flex;gap:5px;overflow:auto;padding:0 0 9px}.sidehead{display:none}.sidebtn{width:auto;white-space:nowrap}.brand{min-width:0}.top{padding:0 14px}.infobox{width:245px}}
+@media(max-width:600px){.top{gap:10px}.brandname{font-size:16px}.brandmark{width:34px;height:34px}.search{width:auto;flex:1}.shell{padding:12px}.page-title{font-size:26px}.infobox{float:none;width:100%;margin:12px 0}.toc{float:none;width:100%;margin:10px 0}.cardgrid{grid-template-columns:1fr}.tabs{margin-bottom:14px}}
+</style>
+</head>
+<body>
+<header class="top">
+ <a class="brand" href="#" data-go="history"><div class="brandmark">H</div><div class="brandname">Homies | SMP<small>The free server encyclopedia</small></div></a>
+ <div class="search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search Homies | SMP Wiki" aria-label="Search wiki pages"></div>
+</header>
+<div class="shell">
+<aside class="sidebar">
+ <div class="sidehead">Navigation</div>
+ <button class="sidebtn active" data-go="history"><span class="sideicon">⌂</span>Main history</button>
+ <button class="sidebtn" data-go="factions"><span class="sideicon">⚑</span>Factions</button>
+ <button class="sidebtn" data-go="builds"><span class="sideicon">⌂</span>Builds & locations</button>
+ <div class="sidehead">Historical eras</div>
+ <button class="sidebtn" data-go="before"><span class="sideicon">◷</span>Early Days</button>
+ <button class="sidebtn" data-go="preend"><span class="sideicon">⚒</span>Pre-End Dimension Era</button>
+ <button class="sidebtn" data-go="elytra"><span class="sideicon">✧</span>Age of Elytra</button>
+ <div class="sidehead">Featured pages</div>
+ <button class="sidebtn" data-go="french-empire">French Empire</button>
+ <button class="sidebtn" data-go="tk-land">TK Land</button>
+ <button class="sidebtn" data-go="israel">Israel</button>
+ <button class="sidebtn" data-go="blood-iron">Blood and Iron</button>
+</aside>
+<main>
+ <nav class="tabs">
+  <button class="tab active" data-go="history">Main history</button>
+  <button class="tab" data-go="factions">Factions</button>
+  <button class="tab" data-go="builds">Builds</button>
+  <button class="tab" data-go="about">About this wiki</button>
+ </nav>
+ <div id="searchResults" class="search-results"></div>
+
+ <section class="page active" id="history">
+  <h1 class="page-title">Homies | SMP</h1>
+  <div class="subtitle">From the Homies | SMP Wiki, the community encyclopedia</div>
+  <div class="infobox"><h3>Homies | SMP</h3><div class="infopic">⛏️🌎</div><table>
+   <tr><td>Type</td><td>Minecraft survival multiplayer server</td></tr><tr><td>World</td><td>Shared survival world</td></tr><tr><td>Known eras</td><td>3 recorded eras</td></tr><tr><td>Notable settlements</td><td><a href="#" data-go="builds">New Gurp City</a>, <a href="#" data-go="sakura">Sakura Sanctuary</a>, <a href="#" data-go="plaintiff">Plaintiff</a></td></tr><tr><td>Factions</td><td><a href="#" data-go="factions">Faction index</a></td></tr>
+  </table></div>
+  <p class="lead"><b>Homies | SMP</b> is a Minecraft survival multiplayer server whose history is marked by ambitious construction projects, expanding settlements, farms, faction-building, rivalries, and several memorable disasters. This page documents the server's history in three broad eras, alongside dedicated pages for its <a href="#" data-go="factions">factions</a>, <a href="#" data-go="builds">builds</a>, and locations.</p>
+  <div class="toc"><h3>Contents</h3><ol><li><a href="#early">Early history</a></li><li><a href="#preend-section">Pre-End Dimension Era</a></li><li><a href="#elytra-section">Age of Elytra</a></li><li><a href="#related">Related pages</a></li></ol></div>
+  <div class="notice">This wiki follows the event order supplied by the server's chronicle. Exact dates are shown only when known; undated events are not assigned invented dates.</div>
+  <h2 class="section" id="early">Early history — Early Days</h2>
+  <p>The server was created on August 11. Early activity centered on spawn, where the Bakery, the first enchantment area, “Pussy Cove”, and the “Cave” were established. The early period also saw the construction and destruction of the Bakery, TK's giant flaming T, and the beginning of Kaden's feud with the mountain surrounding spawn.</p>
+  <div class="timeline" id="history-before"></div>
+  <p>See the full <a href="#" data-go="before">Early Days article</a> for the complete list of recorded events.</p>
+  <h2 class="section" id="preend-section">Pre-End Dimension Era</h2>
+  <p>As the server expanded, settlements such as <a href="#" data-go="new-gurp">New Gurp City</a>, <a href="#" data-go="plaintiff">Plaintiff</a>, <a href="#" data-go="sakura">Sakura Sanctuary</a>, and <a href="#" data-go="tk-land">TK Land</a> emerged. Farms, roads, railways, and public infrastructure became increasingly important.</p>
+  <div class="timeline" id="history-preend"></div>
+  <p>See the full <a href="#" data-go="preend">Pre-End Dimension Era article</a>.</p>
+  <h2 class="section" id="elytra-section">Age of Elytra / Post-Enderdragon Fight</h2>
+  <p>The End dimension opened and the Ender Dragon was defeated, with three casualties recorded. Olin secured the server's first four elytras and the dragon egg. The following period brought new factions, large-scale construction, Nether travel infrastructure, and the incident at Abdiel's base that resulted in Kaden's in-world conviction and repayment obligation.</p>
+  <div class="timeline" id="history-elytra"></div>
+  <p>See the full <a href="#" data-go="elytra">Age of Elytra article</a>.</p>
+  <h2 class="section" id="related">Related pages</h2>
+  <div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="factions">Factions of Homies | SMP</a></h3><p>Political groups, settlements, founders, and faction history.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="builds">Builds and locations</a></h3><p>A directory of notable farms, monuments, infrastructure, and bases.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="new-gurp">New Gurp City</a></h3><p>A major settlement founded during the Pre-End era.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="sakura">Sakura Sanctuary</a></h3><p>A settlement known for its cherry river bridge and railway.</p></div>
+  </div>
+ </section>
+
+ <section class="page" id="before"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Early Days</h1><div class="subtitle">Historical era · 11 recorded events</div><p>The earliest known period of the server, beginning with its creation on August 11.</p><div class="timeline" id="list-before"></div></section>
+ <section class="page" id="preend"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Pre-End Dimension Era</h1><div class="subtitle">Historical era · 21 recorded events</div><p>A period of settlement growth, public works, automated farms, and the emergence of server-wide organization.</p><div class="timeline" id="list-preend"></div></section>
+ <section class="page" id="elytra"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Age of Elytra / Post-Enderdragon Fight</h1><div class="subtitle">Historical era · 30 recorded events</div><p>The End opens, elytra travel changes exploration, and faction politics become more prominent.</p><div class="timeline" id="list-elytra"></div></section>
+
+ <section class="page" id="factions">
+  <h1 class="page-title">Factions of Homies | SMP</h1><div class="subtitle">Political and territorial organizations in the server</div>
+  <p class="lead">Factions are organized groups that claim an identity, territory, or shared political purpose in the Homies | SMP world. The following index records known founders and major developments.</p>
+  <table class="wikitable"><tr><th>Faction</th><th>Founder</th><th>Status / notes</th></tr>
+   <tr><td><a href="#" data-go="french-empire">French Empire</a></td><td>Kaden</td><td><span class="tag red">Abolished</span> Abolished after Jackson's terrorist attack on spawn.</td></tr>
+   <tr><td><a href="#" data-go="tk-land">TK Land</a></td><td>TK</td><td><span class="tag green">Founded</span> TK's faction and territory.</td></tr>
+   <tr><td><a href="#" data-go="israel">Israel</a></td><td>Logan</td><td><span class="tag green">Founded</span> Later associated with map art and the Israeli flag rampart.</td></tr>
+   <tr><td><a href="#" data-go="blood-iron">Blood and Iron</a></td><td>Erin</td><td><span class="tag green">Founded</span> Associated with the Pact of Blood and Iron.</td></tr>
+   <tr><td>Axis Powers</td><td>Not recorded</td><td>Founded during the Pre-End Dimension Era.</td></tr>
+   <tr><td>Purrssia-Mewthinia</td><td>Not recorded</td><td>Founded during the Age of Elytra.</td></tr>
+   <tr><td>Copper Guild</td><td>Not recorded</td><td>Founded during the Age of Elytra.</td></tr>
+  </table>
+  <div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="french-empire">French Empire</a></h3><p>Founded by Kaden; later abolished following the attack on spawn.</p><span class="tag red">Abolished</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="tk-land">TK Land</a></h3><p>Faction founded by TK.</p><span class="tag green">Founded</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="israel">Israel</a></h3><p>Faction founded by Logan, with map-art and rampart projects.</p><span class="tag green">Founded</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="blood-iron">Blood and Iron</a></h3><p>Faction founded by Erin; linked by name to the Pact of Blood and Iron.</p><span class="tag green">Founded</span></div>
+  </div>
+ </section>
+
+ <section class="page" id="builds">
+  <h1 class="page-title">Builds and locations</h1><div class="subtitle">Directory of notable construction and infrastructure</div>
+  <p class="lead">This directory is compiled from the recorded server history. It includes completed builds, farms, transport links, settlements, and projects whose construction or fate is specifically mentioned. Select an entry to open its article.</p>
+  <h2 class="section">Spawn and nearby landmarks</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="bakery">The Bakery</a></h3><p>Kaden's base and bakery; exploded by a trapped chest, rebuilt, and later burned down by lightning.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">Spawn enchantment area</a></h3><p>The first enchantment area created at spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">Pussy Cove and the Cave</a></h3><p>Two early spawn landmarks.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">TK's flaming T</a></h3><p>A giant flaming T erected near the early server period.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="statue">Statue of Dih</a></h3><p>A statue overlooking spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="goon-tower">The Goon Tower</a></h3><p>Kaden's house, erected during the Age of Elytra.</p></div>
+  </div>
+  <h2 class="section">Farms and utility builds</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Gold farm</a></h3><p>The server's first gold farm.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Raid farm</a></h3><p>Completed during the Pre-End era.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Olin's farm complex</a></h3><p>Sugar cane, iron, and creeper farms.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Shulker and trident farms</a></h3><p>Both completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Wool farm</a></h3><p>Completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="plaintiff">Plaintiff wheat farm</a></h3><p>A giant wheat farm built in Plaintiff.</p></div>
+  </div>
+  <h2 class="section">Settlements and transport</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="new-gurp">New Gurp City</a></h3><p>Founded with roads; later gained a jousting arena, spawn house, pond, trees, and paths.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="plaintiff">Plaintiff</a></h3><p>Settlement with a mob farm and a giant wheat farm.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="sakura">Sakura Sanctuary</a></h3><p>Settlement with a town hall, arch bridge, and railway headquarters.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="transport">NS Railway</a></h3><p>Railway connecting Sakura Sanctuary with Spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="transport">Aarav-Erin Nether Highway</a></h3><p>Ice tunnels completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="mushroom">Aarav's mushroom island</a></h3><p>Colonized by Aarav; terraforming later began.</p></div>
+  </div>
+ </section>
+
+ <section class="page" id="about"><h1 class="page-title">About this wiki</h1><p class="lead">The Homies | SMP Wiki is an unofficial, community-maintained record of the server's history, factions, builds, and locations.</p><p>Pages are connected through internal links, like a traditional encyclopedia. Information is based on the chronology and details provided for this wiki. Unknown dates and unconfirmed founders are left unspecified rather than guessed.</p><div class="notice">Want to expand the archive? Add dates, player pages, screenshots, coordinates, and more event details as the server develops.</div></section>
+
+ <!-- Individual linked articles -->
+ <section class="page" id="french-empire"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">French Empire</h1><div class="subtitle">Faction · Founded by Kaden · Abolished</div><div class="infobox"><h3>French Empire</h3><div class="infopic">⚜️</div><table><tr><td>Founder</td><td>Kaden</td></tr><tr><td>Status</td><td><span class="tag red">Abolished</span></td></tr><tr><td>End</td><td>After Jackson's terrorist attack on spawn</td></tr></table></div><p class="lead">The <b>French Empire</b> was a faction founded by Kaden. It was later abolished after Jackson's terrorist attack on spawn.</p><h2 class="section">History</h2><p>The available server record identifies Kaden as the founder and records the faction's abolition following the attack on spawn. Further details, including its founding date, territory, members, and exact dissolution date, have not yet been documented.</p><div class="notice">This article records the event as described in the server chronicle; it does not add an unprovided date or further details about the attack.</div><h2 class="section">Related pages</h2><p><a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="history">Main history</a></p></section>
+ <section class="page" id="tk-land"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">TK Land</h1><div class="subtitle">Faction / territory · Founded by TK</div><div class="infobox"><h3>TK Land</h3><div class="infopic">🏰</div><table><tr><td>Founder</td><td>TK</td></tr><tr><td>Recorded</td><td>Pre-End era; faction founded in Age of Elytra</td></tr><tr><td>Associated project</td><td>Sakura Sanctuary / TK Land parties</td></tr></table></div><p class="lead"><b>TK Land</b> is a faction and territory founded by TK. TK Land is mentioned among the server's settlements and later appears as a formally founded faction during the Age of Elytra.</p><h2 class="section">History</h2><p>TK Land and Sakura Sanctuary are recorded as founded during the Pre-End Dimension Era. The TK Land faction is separately recorded as founded during the Age of Elytra. The server history also notes the creation of French, Israel, and TK Land parties.</p><p>See also: <a href="#" data-go="sakura">Sakura Sanctuary</a> · <a href="#" data-go="factions">Factions index</a>.</p></section>
+ <section class="page" id="israel"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">Israel</h1><div class="subtitle">Faction · Founded by Logan</div><div class="infobox"><h3>Israel</h3><div class="infopic">🛡️</div><table><tr><td>Founder</td><td>Logan</td></tr><tr><td>Recorded projects</td><td>Map art; Israeli flag rampart</td></tr><tr><td>Party</td><td>Israel party</td></tr></table></div><p class="lead"><b>Israel</b> is a faction founded by Logan during the Age of Elytra.</p><h2 class="section">History and projects</h2><p>The server chronicle records the completion of Israel map art and the eventual completion of an Israeli flag rampart. An Israel party is also recorded among the parties formed during this era.</p><p>See also: <a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="builds">Builds and locations</a>.</p></section>
+ <section class="page" id="blood-iron"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">Blood and Iron</h1><div class="subtitle">Faction · Founded by Erin</div><div class="infobox"><h3>Blood and Iron</h3><div class="infopic">⚔️</div><table><tr><td>Founder</td><td>Erin</td></tr><tr><td>Related event</td><td>Pact of Blood and Iron formed</td></tr></table></div><p class="lead"><b>Blood and Iron</b> is a faction founded by Erin.</p><h2 class="section">History</h2><p>The Age of Elytra chronicle records the formation of the Pact of Blood and Iron. This wiki lists Blood and Iron as a faction founded by Erin, as specified in the faction record. The relationship between the faction and the pact can be expanded as more details become available.</p><p>See also: <a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="history">Main history</a>.</p></section>
+
+ <section class="page" id="bakery"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">The Bakery</h1><div class="subtitle">Spawn landmark and Kaden's base</div><p class="lead">The <b>Bakery</b> was an early build at spawn and served as Kaden's base. Its history is notable for repeated destruction and reconstruction.</p><h2 class="section">History</h2><ul><li>The Bakery / Kaden's base was completed during the earliest server period.</li><li>It was blown up at spawn by a trapped chest.</li><li>Kaden rebuilt the Bakery.</li><li>It later burned down due to lightning.</li></ul><p>See also: <a href="#" data-go="before">Early Days</a> · <a href="#" data-go="spawn">Spawn landmarks</a>.</p></section>
+ <section class="page" id="spawn"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Spawn landmarks</h1><div class="subtitle">Central area · early server history</div><p class="lead">Spawn was the site of several of the server's earliest public builds and later underwent a major overhaul.</p><h2 class="section">Recorded landmarks</h2><ul><li>First enchantment area at spawn.</li><li>“Pussy Cove” and the “Cave”.</li><li>TK's giant flaming T.</li><li>Bakery / Kaden's base.</li><li>Statue of Dih overlooking spawn.</li><li>“Brick building” construction began at spawn.</li></ul><h2 class="section">Spawn overhaul</h2><p>During the Pre-End Dimension Era, an overhaul of spawn began. The surrounding mountain was excavated and buildings were removed. Kaden's long-running feud with the mountain had begun in the earliest period.</p></section>
+ <section class="page" id="statue"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Statue of Dih</h1><div class="subtitle">Monument · Overlooking Spawn</div><p class="lead">The Statue of Dih is a monument erected overlooking spawn during the Pre-End Dimension Era. Its builder and exact completion date are not recorded.</p><p>See also: <a href="#" data-go="spawn">Spawn landmarks</a>.</p></section>
+ <section class="page" id="goon-tower"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">The Goon Tower</h1><div class="subtitle">Residence · Kaden</div><p class="lead">The Goon Tower is the name given to Kaden's house, erected during the Age of Elytra.</p><p>See also: <a href="#" data-go="elytra">Age of Elytra</a> · <a href="#" data-go="builds">Builds index</a>.</p></section>
+ <section class="page" id="farms"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Farms of Homies | SMP</h1><div class="subtitle">Infrastructure directory</div><p class="lead">The server's farms provide resources and automation for its settlements and players.</p><table class="wikitable"><tr><th>Farm</th><th>Recorded detail</th><th>Era</th></tr><tr><td>First gold farm</td><td>First gold farm constructed</td><td>Pre-End</td></tr><tr><td>Raid farm</td><td>Completed</td><td>Pre-End</td></tr><tr><td>Olin's sugar cane farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Olin's iron farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Olin's creeper farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Shulker farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Wool farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Trident farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Plaintiff wheat farm</td><td>Giant wheat farm completed</td><td>Pre-End</td></tr></table></section>
+ <section class="page" id="new-gurp"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">New Gurp City</h1><div class="subtitle">Settlement · Founded in the Pre-End Dimension Era</div><div class="infobox"><h3>New Gurp City</h3><div class="infopic">🏘️</div><table><tr><td>Founded</td><td>Pre-End Dimension Era</td></tr><tr><td>Known features</td><td>Roads, jousting arena, spawn house, pond, trees, paths</td></tr></table></div><p class="lead"><b>New Gurp City</b> is a settlement officially founded during the Pre-End Dimension Era, when its roads were laid.</p><h2 class="section">Development</h2><p>The city later completed a jousting arena. During the Age of Elytra, its spawn house was finished and the city gained a pond, trees, paths, and other additions.</p></section>
+ <section class="page" id="plaintiff"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Plaintiff</h1><div class="subtitle">Settlement · Founded in the Pre-End Dimension Era</div><p class="lead"><b>Plaintiff</b> was officially founded during the Pre-End Dimension Era. Jackson's mob farm was completed there before it was later torn down.</p><h2 class="section">Recorded developments</h2><ul><li>Jackson's mob farm completed.</li><li>Jackson's mob farm torn down.</li><li>The giant wheat farm completed.</li><li>Bradly moved out of Plaintiff following the stripped oak log incident.</li></ul></section>
+ <section class="page" id="sakura"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Sakura Sanctuary</h1><div class="subtitle">Settlement · Cherry river region</div><div class="infobox"><h3>Sakura Sanctuary</h3><div class="infopic">🌸</div><table><tr><td>Founded</td><td>Pre-End Dimension Era</td></tr><tr><td>Known builds</td><td>Arch bridge, town hall, railway headquarters</td></tr></table></div><p class="lead"><b>Sakura Sanctuary</b> is a settlement founded during the Pre-End Dimension Era alongside TK Land.</p><h2 class="section">Development</h2><p>Notable projects include the Sakura arch bridge over the cherry river, its town hall, and the Sakura Sanctuary Railroad headquarters. The NS Railway connected Sakura Sanctuary with Spawn.</p></section>
+ <section class="page" id="transport"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Transport infrastructure</h1><div class="subtitle">Railways and Nether highways</div><h2 class="section">NS Railway</h2><p>The NS Railway was completed during the Pre-End Dimension Era, connecting Sakura Sanctuary with Spawn.</p><h2 class="section">Aarav-Erin Nether Highway</h2><p>The Aarav-Erin Nether Highway's ice tunnels were completed during the Age of Elytra.</p><h2 class="section">Sakura Sanctuary Railroad headquarters</h2><p>The railroad headquarters was completed during the Age of Elytra.</p></section>
+ <section class="page" id="mushroom"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Aarav's mushroom island</h1><div class="subtitle">Island settlement and terraforming project</div><p class="lead">Aarav colonized a mushroom island during the Age of Elytra. Terraforming on the island began later in the same era.</p><p>See also: <a href="#" data-go="elytra">Age of Elytra</a>.</p></section>
+ <div class="footer"><span>Homies | SMP Wiki · Unofficial community encyclopedia</span><span>Last structured from the supplied server chronicle</span></div>
+</main>
+</div>
+<script>
+const data={
+before:[
+["Server created","August 11"],["Bakery / Kaden’s base finished"],["First enchantment area created at spawn"],["“Pussy Cove” finished at spawn"],["“Cave” finished at spawn"],["TK’s giant flaming T is erected"],["Bakery exploded at spawn by a trapped chest"],["Bakery rebuilt by Kaden"],["Bakery burned down by lightning"],["Ricardo kills Pedro (Kaden’s dog)"],["Kaden’s beef with the giant mountain surrounding spawn starts — he wants to destroy the mountain"]
+],
+preend:[
+["Statue of Dih overlooking spawn is erected"],["Abdiel’s base burnt down by Logan, due to constant killing"],["New Gurp City officially founded; roads are laid"],["Plaintiff officially founded; Jackson’s mob farm complete"],["Jackson’s mob farm torn down"],["First gold farm constructed"],["Skulkbone Yards / Eggland founded"],["Villager trade hall is completed"],["“Brick building” begins construction at spawn"],["The Plaintiff giant wheat farm is completed"],["TK Land and Sakura Sanctuary founded"],["Raid farm completed"],["First server-wide event is held: mini game competition"],["Overhaul of spawn; mountain excavation begins and buildings are removed"],["Bradly moves out of Plaintiff (stripped oak log incident)"],["New Gurp City jousting arena is completed"],["NS Railway is completed, connecting Sakura Sanctuary with Spawn"],["“Parker likes dih” sign constructed"],["Erin’s base in the desert is created"],["Olin builds sugar cane farm, iron farm, and creeper farm"],["Axis Powers founded"]
+],
+elytra:[
+["End dimension opens; Ender Dragon fight (3 casualties)"],["Olin secures the server’s first 4 elytras (and dragon egg)"],["Sakura arch bridge built over the cherry river"],["Warden machine finished; attacks south side of spawn"],["Shulker farm completed"],["New Gurp City spawn house finished"],["Bradley’s mansion completed"],["Aarav colonizes mushroom island"],["Server updates to 26.3"],["Purrssia-Mewthinia founded"],["Copper Guild founded"],["Wool farm is complete"],["TK Land faction founded"],["Israel faction formed"],["Abdiel founds Cartethyia Cosmopolis in the mesa"],["Mount Logan, tallest in the server, is summited"],["Trident farm completed"],["Terraforming begins on Aarav’s mushroom island"],["Sakura Sanctuary town hall is constructed"],["Aarav-Erin Nether Highway ice tunnels completed"],["Israel map art finished"],["Abdiel finishes water tower and starts building Bank trading hall"],["New Gurp City adds pond, trees, paths, and more"],["Kaden’s house is erected (the Goon Tower)"],["Kaden is officially getting sued after an incident under Abdiel’s base destroys his elytras and loot in a self-sabotage explosion"],["French, Israel, and TK Land parties created"],["Sakura Sanctuary Railroad headquarters finished"],["Israeli flag rampart finally completed"],["Pact of Blood and Iron formed"],["Kaden is charged guilty for domestic terrorism at Abdiel’s base; must repay with 2 elytras"]
+]};
+const eventImages={
+'before-3':['homies_smp_assets/pussy-cove.png','Pussy Cove at spawn'],
+'before-4':['homies_smp_assets/cave-bakery.png','The Cave and Bakery at spawn'],
+'before-6':['homies_smp_assets/bakery-explosion.png','The trapped chest associated with the Bakery explosion'],
+'before-9':['homies_smp_assets/pedro.png','Pedro, Kaden’s dog'],
+'before-10':['homies_smp_assets/mountain-feud.png','The mountain surrounding spawn, where Kaden’s feud began'],
+'preend-17':['homies_smp_assets/parker-likes-dih.png','The “Parker likes dih” sign and dirt statue'],
+'preend-14':['homies_smp_assets/bradleys-base.png','Bradley’s base in the early days'],
+'elytra-23':['homies_smp_assets/goon-tower.png','The Goon Tower']
+};
+function eventPageId(key,i){return `event-${key}-${i}`}
+function addEvents(id,key,limit){const root=document.getElementById(id);const entries=limit?data[key].slice(0,limit):data[key];entries.forEach((item,i)=>{const el=document.createElement("div");el.className="event";const date=item[1]?`<span class="date">${item[1]}</span>`:"";el.innerHTML=`<a class="event-link" href="#" data-go="${eventPageId(key,i)}"><strong>${String(i+1).padStart(2,"0")}. ${escapeHtml(item[0])}</strong>${date}</a>`;root.appendChild(el)})}
+function createEventPages(){const main=document.querySelector('main');Object.entries(data).forEach(([era,events])=>events.forEach((item,i)=>{const id=eventPageId(era,i);const page=document.createElement('section');page.className='page event-article';page.id=id;const title=item[0];const img=eventImages[`${era}-${i}`];const eraName=era==='before'?'Early Days':era==='preend'?'Pre-End Dimension Era':'Age of Elytra';let content=`<a class="back" href="#" data-go="${era}">← ${eraName}</a><h1 class="page-title">${escapeHtml(title)}</h1><div class="subtitle">${eraName} · Event ${i+1} of ${events.length}${item[1]?' · '+escapeHtml(item[1]):''}</div><p class="lead">This page records the event “${escapeHtml(title)}” in the history of Homies | SMP.</p>`;if(img){content+=`<figure style="margin:14px 0 20px"><img class="article-image" src="${img[0]}" alt="${escapeHtml(img[1])}"><figcaption class="image-caption">${escapeHtml(img[1])}</figcaption></figure>`}content+=`<h2 class="section">Context</h2><p>This event is part of the ${eraName} chronology. It is preserved here as an individual entry so it can be linked, searched, and expanded with more details as the server history grows.</p><p>See also: <a href="#" data-go="history">Main history</a> · <a href="#" data-go="${era}">${eraName}</a>.</p>`;page.innerHTML=content;main.insertBefore(page,document.querySelector('.footer'))}));}
+createEventPages();
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+addEvents("history-before","before",6);addEvents("history-preend","preend",7);addEvents("history-elytra","elytra",8);
+addEvents("list-before","before");addEvents("list-preend","preend");addEvents("list-elytra","elytra");
+function go(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));target.classList.add("active");document.querySelectorAll("[data-go]").forEach(b=>b.classList.toggle("active",b.dataset.go===id));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.go===id));document.getElementById("searchResults").classList.remove("show");document.getElementById("globalSearch").value="";window.scrollTo({top:0,behavior:"smooth"})}
+document.addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a){e.preventDefault();go(a.dataset.go)}});
+const pages=[["Main history","history"],["Factions","factions"],["Builds and locations","builds"],["Early Days","before"],["Pre-End Dimension Era","preend"],["Age of Elytra","elytra"],["French Empire","french-empire"],["TK Land","tk-land"],["Israel","israel"],["Blood and Iron","blood-iron"],["The Bakery","bakery"],["Spawn landmarks","spawn"],["Statue of Dih","statue"],["The Goon Tower","goon-tower"],["Farms of Homies | SMP","farms"],["New Gurp City","new-gurp"],["Plaintiff","plaintiff"],["Sakura Sanctuary","sakura"],["Transport infrastructure","transport"],["Aarav's mushroom island","mushroom"],["About this wiki","about"]];
+data.before.forEach((item,i)=>pages.push([item[0],eventPageId("before",i)]));data.preend.forEach((item,i)=>pages.push([item[0],eventPageId("preend",i)]));data.elytra.forEach((item,i)=>pages.push([item[0],eventPageId("elytra",i)]));
+const search=document.getElementById("globalSearch"),results=document.getElementById("searchResults");
+search.addEventListener("input",()=>{const q=search.value.trim().toLowerCase();if(!q){results.classList.remove("show");results.innerHTML="";return}const found=pages.filter(p=>p[0].toLowerCase().includes(q));results.innerHTML=found.length?found.map(p=>`<a href="#" data-go="${p[1]}">${p[0]}</a>`).join(""):"<span class='muted'>No matching wiki pages found.</span>";results.classList.add("show")});
+</script>
+</body></html>
