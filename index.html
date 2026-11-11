@@ -3,161 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#071522">
-<title>Minecraft Build Dive</title>
+<meta name="theme-color" content="#06131f">
+<title>Name a build on the server</title>
 <style>
   :root {
     color-scheme: dark;
-    --bg: #06131f;
-    --panel: #0c1d2b;
-    --panel2: #102638;
-    --line: #244052;
-    --text: #f2f8fb;
-    --muted: #91a9b7;
-    --plankton: #a7b8c4;
-    --clever: #5ce0d2;
-    --schooler: #74b8ff;
-    --rare: #bd91ff;
-    --deep: #f18cce;
-    --krillion: #ffd36a;
+    --bg:#06131f; --panel:#0b1d2b; --panel2:#102638; --line:#27485a;
+    --text:#f2f8fb; --muted:#91a9b7;
+    --plankton:#a7b8c4; --clever:#5ce0d2; --schooler:#74b8ff;
+    --rare:#bd91ff; --deep:#f18cce; --krillion:#ffd36a;
   }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; min-height: 100vh; padding: 26px 16px 40px;
-    display: grid; place-items: start center;
-    color: var(--text);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background:
-      radial-gradient(ellipse at 50% -18%, #1e5361 0%, transparent 44%),
-      radial-gradient(ellipse at 100% 70%, #102f48 0%, transparent 45%),
-      linear-gradient(180deg, #081a29 0%, #06131f 60%, #040d17 100%);
+  *{box-sizing:border-box}
+  body{
+    margin:0;min-height:100vh;padding:26px 16px 42px;display:grid;place-items:start center;
+    color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    background:radial-gradient(ellipse at 50% -18%,#1e5361 0%,transparent 45%),radial-gradient(ellipse at 100% 70%,#102f48 0%,transparent 45%),linear-gradient(180deg,#081a29,#06131f 62%,#040d17);
+    overflow-x:hidden;
   }
-  body::before {
-    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .18;
-    background-image: radial-gradient(#a4d4e4 1px, transparent 1px);
-    background-size: 42px 42px; mask-image: linear-gradient(to bottom, black, transparent 78%);
-  }
-  .app { width: min(690px, 100%); position: relative; }
-  .topline { display: flex; justify-content: center; align-items: center; gap: 9px; margin: 0 0 18px; color: #8bb9c8; font-size: .72rem; font-weight: 900; letter-spacing: .18em; text-transform: uppercase; }
-  .topline .bubble { width: 7px; height: 7px; border-radius: 50%; background: #5ce0d2; box-shadow: 0 0 13px #5ce0d2; }
-  .game-card {
-    overflow: visible; border: 1px solid #2b4c5e; border-radius: 23px;
-    background: linear-gradient(155deg, #102b3b 0%, #0a1c2a 52%, #091724 100%);
-    box-shadow: 0 24px 90px #0008, inset 0 1px #ffffff0b;
-    padding: clamp(20px, 5vw, 36px);
-  }
-  .question-kicker { text-align: center; color: #83b6c7; font-size: .7rem; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; margin-bottom: 13px; }
-  h1 { text-align: center; font-size: clamp(1.5rem, 5vw, 2.25rem); line-height: 1.13; letter-spacing: -.04em; margin: 0 auto 12px; max-width: 540px; }
-  .instructions { text-align: center; color: var(--muted); font-size: .9rem; line-height: 1.5; margin: 0 auto 24px; }
-  .answer-wrap { position: relative; }
-  .answer-row { display: flex; gap: 9px; align-items: stretch; }
-  input {
-    flex: 1; min-width: 0; height: 54px; border-radius: 13px; padding: 0 16px;
-    border: 1px solid #36586a; background: #061521; color: var(--text);
-    outline: none; font: inherit; font-size: 1rem; box-shadow: inset 0 2px 9px #0003;
-  }
-  input::placeholder { color: #688391; }
-  input:focus { border-color: #5ce0d2; box-shadow: 0 0 0 3px #5ce0d222, inset 0 2px 9px #0003; }
-  button { font: inherit; cursor: pointer; border: 0; font-weight: 900; transition: transform .13s ease, filter .13s ease, border-color .13s ease; }
-  button:hover { filter: brightness(1.1); transform: translateY(-1px); }
-  button:active { transform: translateY(1px); }
-  .submit {
-    min-width: 132px; padding: 0 17px; border-radius: 13px; color: #052127;
-    background: linear-gradient(135deg, #70efda, #65c9ee); box-shadow: 0 5px 22px #48cfca24;
-  }
-  .suggestions {
-    display: none; position: absolute; z-index: 10; left: 0; right: 0; top: calc(100% + 7px);
-    padding: 6px; border-radius: 13px; background: #0a1a27; border: 1px solid #416276;
-    box-shadow: 0 16px 34px #0009;
-  }
-  .suggestions.show { display: grid; gap: 4px; }
-  .suggestion {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%;
-    text-align: left; color: var(--text); padding: 10px 11px; background: transparent; border-radius: 8px;
-  }
-  .suggestion:hover, .suggestion:focus-visible { background: #183649; outline: none; }
-  .suggestion small { color: #91a9b7; font-weight: 700; white-space: nowrap; }
-  .assist { min-height: 23px; margin: 9px 3px 0; color: #8dcfc8; font-size: .79rem; }
-  .result {
-    display: none; margin-top: 22px; position: relative; text-align: center; border-radius: 17px;
-    padding: 23px 16px 20px; background: #061521; border: 1px solid #2b4c5e;
-  }
-  .result.show { display: block; animation: reveal .34s cubic-bezier(.2,.8,.2,1) both; }
-  @keyframes reveal { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
-  .result-label { color: #91a9b7; font-size: .68rem; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; }
-  .result-rarity { margin: 8px 0 5px; font-size: clamp(1.7rem, 6vw, 2.6rem); line-height: 1.06; font-weight: 1000; letter-spacing: -.045em; }
-  .result-build { font-size: 1.12rem; font-weight: 800; margin-top: 10px; }
-  .result-meta { color: #91a9b7; font-size: .8rem; margin-top: 9px; }
-  .fakeout { display: inline-flex; margin-top: 12px; padding: 6px 12px; border: 1px solid #5ce0d277; border-radius: 99px; color: #5ce0d2; font-size: .69rem; font-weight: 1000; letter-spacing: .13em; }
-  .result.plankton { border-color: var(--plankton); box-shadow: 0 0 25px #a7b8c41a; }
-  .result.too-clever { border-color: var(--clever); box-shadow: 0 0 27px #5ce0d226; }
-  .result.schooler { border-color: var(--schooler); box-shadow: 0 0 27px #74b8ff26; }
-  .result.rare { border-color: var(--rare); box-shadow: 0 0 28px #bd91ff2c; }
-  .result.deep-cut { border-color: var(--deep); box-shadow: 0 0 32px #f18cce35; }
-  .result.one-in-a-krillion { border-color: var(--krillion); box-shadow: 0 0 42px #ffd36a55; animation: reveal .34s ease both, gem-glow 1.4s ease-in-out infinite alternate; }
-  @keyframes gem-glow { to { box-shadow: 0 0 58px #ffd36a88; } }
-  .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; margin-top: 14px; }
-  .panel { min-width: 0; border: 1px solid #203d4f; border-radius: 16px; padding: 16px; background: #091a28d9; }
-  .panel-heading { display: flex; justify-content: space-between; align-items: center; margin: 0 0 12px; color: #a9c3cd; font-size: .69rem; font-weight: 950; letter-spacing: .14em; text-transform: uppercase; }
-  .tier { display: flex; align-items: center; justify-content: space-between; gap: 9px; padding: 7px 0; border-bottom: 1px solid #ffffff0d; font-size: .84rem; }
-  .tier:last-child { border-bottom: 0; }
-  .tier-name { display: flex; align-items: center; gap: 8px; }
-  .tier-dot { width: 8px; height: 8px; flex: 0 0 8px; border-radius: 50%; }
-  .tier-points { color: #7995a5; white-space: nowrap; font-size: .73rem; }
-  .tier-count { color: #c0d4dc; font-variant-numeric: tabular-nums; white-space: nowrap; font-size: .76rem; }
-  .depth { margin-top: 14px; border: 1px solid #203d4f; border-radius: 15px; background: #091a28d9; padding: 13px 16px; display: flex; justify-content: space-between; align-items: center; gap: 15px; }
-  .depth-label { color: #91a9b7; font-weight: 800; letter-spacing: .12em; font-size: .68rem; }
-  .depth-value { color: #70efda; font-size: 1.2rem; font-weight: 1000; font-variant-numeric: tabular-nums; }
-  .recent { display: grid; gap: 9px; color: #91a9b7; font-size: .8rem; }
-  .recent-row { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; align-items: center; }
-  .recent-row strong { color: #dcebf0; font-size: .79rem; font-weight: 700; overflow-wrap: anywhere; }
-  .recent-row span { font-weight: 900; text-align: right; font-size: .7rem; }
-  .empty { color: #718b98; line-height: 1.5; }
-  .footer { display: flex; justify-content: center; margin-top: 14px; }
-  .reset { padding: 9px 13px; background: transparent; border: 1px solid #28495b; color: #91a9b7; border-radius: 10px; font-size: .75rem; }
-  @media (max-width: 560px) {
-    body { padding: 16px 11px 30px; }
-    .topline { margin-bottom: 13px; }
-    .answer-row { flex-direction: column; }
-    .submit { min-height: 48px; }
-    .dashboard { grid-template-columns: 1fr; }
-    .game-card { border-radius: 19px; }
-  }
+  body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#a4d4e4 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(#000,transparent 80%)}
+  .bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .bubble{position:absolute;bottom:-50px;width:7px;height:7px;border:1px solid #8bd2df66;border-radius:50%;background:#8bd2df12;animation:float-up linear infinite}
+  .bubble:nth-child(1){left:8%;animation-duration:17s;animation-delay:-5s}.bubble:nth-child(2){left:22%;width:4px;height:4px;animation-duration:21s;animation-delay:-12s}.bubble:nth-child(3){left:48%;animation-duration:19s;animation-delay:-8s}.bubble:nth-child(4){left:68%;width:5px;height:5px;animation-duration:24s;animation-delay:-16s}.bubble:nth-child(5){left:88%;animation-duration:18s;animation-delay:-3s}
+  @keyframes float-up{to{transform:translateY(-110vh) translateX(24px);opacity:0}}
+  .app{width:min(700px,100%);position:relative;z-index:1}
+  .topline{display:flex;justify-content:center;align-items:center;gap:9px;margin:0 0 18px;color:#8bb9c8;font-size:.7rem;font-weight:950;letter-spacing:.18em;text-transform:uppercase}
+  .topline i{width:7px;height:7px;border-radius:50%;background:#5ce0d2;box-shadow:0 0 13px #5ce0d2}
+  .game-card{border:1px solid #2b4c5e;border-radius:23px;background:linear-gradient(155deg,#102b3b,#0a1c2a 52%,#091724);box-shadow:0 24px 90px #0008,inset 0 1px #ffffff0b;padding:clamp(20px,5vw,36px);overflow:hidden}
+  .question-kicker{text-align:center;color:#83b6c7;font-size:.69rem;font-weight:950;letter-spacing:.2em;text-transform:uppercase;margin-bottom:13px}
+  h1{text-align:center;font-size:clamp(1.5rem,5vw,2.25rem);line-height:1.13;letter-spacing:-.04em;margin:0 auto 11px;max-width:540px}
+  .instructions{text-align:center;color:var(--muted);font-size:.9rem;line-height:1.5;margin:0 auto 23px}
+  .answer-row{display:flex;gap:9px;align-items:stretch}
+  input{flex:1;min-width:0;height:55px;border-radius:13px;padding:0 16px;border:1px solid #36586a;background:#061521;color:var(--text);outline:none;font:inherit;font-size:1rem;box-shadow:inset 0 2px 9px #0003}
+  input::placeholder{color:#688391}input:focus{border-color:#5ce0d2;box-shadow:0 0 0 3px #5ce0d222,inset 0 2px 9px #0003}
+  button{font:inherit;cursor:pointer;border:0;font-weight:950;transition:transform .13s ease,filter .13s ease}
+  button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:active{transform:translateY(1px)}button:disabled{opacity:.65;cursor:wait;transform:none}
+  .submit{min-width:132px;padding:0 17px;border-radius:13px;color:#052127;background:linear-gradient(135deg,#70efda,#65c9ee);box-shadow:0 5px 22px #48cfca24}
+  .assist{min-height:23px;margin:9px 3px 0;color:#8dcfc8;font-size:.79rem;line-height:1.45}
+  .assist.error{color:#ffadad}.assist.success{color:#8fe7ce}
+  .result{display:none;margin-top:22px;position:relative;text-align:center;border-radius:18px;padding:26px 16px 22px;background:#061521;border:1px solid #2b4c5e;isolation:isolate;overflow:hidden}
+  .result.show{display:block;animation:card-in .42s cubic-bezier(.2,.8,.2,1) both}
+  @keyframes card-in{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+  .result:before{content:"";position:absolute;inset:-70% -30%;z-index:-1;opacity:0;background:conic-gradient(from 0deg,transparent,#ffffff14,transparent 35%);transform:rotate(0deg)}
+  .result.rolling:before{opacity:1;animation:shine-spin 1.2s linear infinite}
+  @keyframes shine-spin{to{transform:rotate(360deg)}}
+  .result-label{color:#91a9b7;font-size:.67rem;font-weight:950;letter-spacing:.2em;text-transform:uppercase}
+  .result-rarity{margin:9px 0 5px;font-size:clamp(1.7rem,6vw,2.65rem);line-height:1.06;font-weight:1000;letter-spacing:-.045em}
+  .result-build{font-size:1.12rem;font-weight:850;margin-top:10px;min-height:1.5em}
+  .result-meta{color:#91a9b7;font-size:.8rem;margin-top:9px;line-height:1.5}
+  .result.rolling .result-rarity,.result.rolling .result-build{filter:blur(.35px);animation:slot-jitter .11s linear infinite alternate}
+  @keyframes slot-jitter{from{transform:translateY(-3px);opacity:.66}to{transform:translateY(3px);opacity:1}}
+  .roll-track{height:4px;max-width:310px;margin:19px auto 0;border-radius:99px;background:#193447;overflow:hidden}
+  .roll-track span{display:block;width:35%;height:100%;border-radius:99px;background:linear-gradient(90deg,#5ce0d2,#74b8ff,#f18cce);animation:roll-progress .85s ease-in-out infinite}
+  @keyframes roll-progress{from{transform:translateX(-120%)}to{transform:translateX(400%)}}
+  .fakeout{display:inline-flex;margin-top:13px;padding:6px 12px;border:1px solid #5ce0d277;border-radius:99px;color:#5ce0d2;font-size:.69rem;font-weight:1000;letter-spacing:.13em}
+  .result.plankton{border-color:var(--plankton);box-shadow:0 0 25px #a7b8c41a}
+  .result.too-clever{border-color:var(--clever);box-shadow:0 0 27px #5ce0d226}
+  .result.schooler{border-color:var(--schooler);box-shadow:0 0 30px #74b8ff38}
+  .result.rare{border-color:var(--rare);box-shadow:0 0 31px #bd91ff45}
+  .result.deep-cut{border-color:var(--deep);box-shadow:0 0 35px #f18cce52}
+  .result.one-in-a-krillion{border-color:var(--krillion);box-shadow:0 0 45px #ffd36a70;animation:card-in .42s ease both,legend-glow 1.1s ease-in-out infinite alternate}
+  @keyframes legend-glow{to{box-shadow:0 0 65px #ffd36aaa,inset 0 0 25px #ffd36a12}}
+  .fakeout[hidden]{display:none}
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+  .particle{position:absolute;left:var(--x);top:58%;width:6px;height:6px;border-radius:2px;background:var(--c);box-shadow:0 0 10px var(--c);animation:burst .85s ease-out forwards}
+  @keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(280deg) scale(.1);opacity:0}}
+  .dashboard{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:14px}
+  .panel{min-width:0;border:1px solid #203d4f;border-radius:16px;padding:16px;background:#091a28d9}
+  .panel-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px;color:#a9c3cd;font-size:.69rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
+  .tier{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:7px 0;border-bottom:1px solid #ffffff0d;font-size:.84rem}.tier:last-child{border-bottom:0}
+  .tier-name{display:flex;align-items:center;gap:8px}.tier-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%}.tier-points{color:#7995a5;white-space:nowrap;font-size:.73rem}.tier-count{color:#c0d4dc;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.76rem}
+  .depth{margin-top:14px;border:1px solid #203d4f;border-radius:15px;background:#091a28d9;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;gap:15px}
+  .depth-label{color:#91a9b7;font-weight:850;letter-spacing:.12em;font-size:.68rem}.depth-value{color:#70efda;font-size:1.2rem;font-weight:1000;font-variant-numeric:tabular-nums}
+  .recent{display:grid;gap:9px;color:#91a9b7;font-size:.8rem}.recent-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.recent-row strong{color:#dcebf0;font-size:.79rem;font-weight:700;overflow-wrap:anywhere}.recent-row span{font-weight:900;text-align:right;font-size:.7rem}.empty{color:#718b98;line-height:1.5}
+  .footer{display:flex;justify-content:center;margin-top:14px}.reset{padding:9px 13px;background:transparent;border:1px solid #28495b;color:#91a9b7;border-radius:10px;font-size:.75rem}
+  @media(max-width:560px){body{padding:16px 11px 30px}.answer-row{flex-direction:column}.submit{min-height:49px}.dashboard{grid-template-columns:1fr}.game-card{border-radius:19px}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
+<div class="bubbles" aria-hidden="true"><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
 <main class="app">
-  <div class="topline"><span class="bubble"></span> ONE QUESTION · UNLIMITED GUESSES <span class="bubble"></span></div>
+  <div class="topline"><i></i> ONE QUESTION · UNLIMITED GUESSES <i></i></div>
   <section class="game-card">
     <div class="question-kicker">YOUR PROMPT</div>
     <h1>Name a build on the server.</h1>
     <p class="instructions">Type any build you remember. Spelling mistakes and missing words are okay.<br>Destroyed builds still count.</p>
-
     <form id="answerForm" autocomplete="off">
-      <div class="answer-wrap">
-        <div class="answer-row">
-          <input id="answer" type="text" placeholder="Type a build..." aria-label="Name a build" aria-autocomplete="list" aria-controls="suggestions">
-          <button class="submit" type="submit">LOCK IN ↗</button>
-        </div>
-        <div id="suggestions" class="suggestions" role="listbox" aria-label="Possible build matches"></div>
+      <div class="answer-row">
+        <input id="answer" type="text" placeholder="Type a build..." aria-label="Name a build" spellcheck="false">
+        <button class="submit" id="submitButton" type="submit">LOCK IN ↗</button>
       </div>
     </form>
-    <div id="assist" class="assist" aria-live="polite">Auto-correct is on — try typing a rough version of a build name.</div>
-
+    <div id="assist" class="assist" aria-live="polite">AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.</div>
     <div id="result" class="result" aria-live="polite">
-      <div class="result-label">YOUR ANSWER</div>
+      <div class="particles" id="particles"></div>
+      <div class="result-label" id="resultLabel">YOUR ANSWER</div>
       <div id="resultRarity" class="result-rarity"></div>
       <div id="resultBuild" class="result-build"></div>
       <div id="resultMeta" class="result-meta"></div>
       <div id="fakeout" class="fakeout" hidden>TOO CLEVER · FAKE OUT</div>
+      <div id="rollTrack" class="roll-track" hidden><span></span></div>
     </div>
   </section>
-
   <div class="depth">
     <div><div class="depth-label">YOUR DIVE DEPTH</div><div style="color:#718b98;font-size:.72rem;margin-top:4px">10 metres per point</div></div>
     <div class="depth-value" id="depthValue">0 m</div>
   </div>
-
   <section class="dashboard">
     <div class="panel">
       <div class="panel-heading"><span>Rarity tiers</span><span>Points</span></div>
@@ -182,228 +133,199 @@
   </section>
   <div class="footer"><button class="reset" id="reset" type="button">Reset current answer</button></div>
 </main>
-
 <script>
-// The rarity scale follows Krillion's tier names. Your server's original
-// build groupings are kept: Common → Plankton, 15 point one → Too Clever.
 const tiers = {
-  "One in a Krillion": { key: "one-in-a-krillion", points: 100, color: "var(--krillion)" },
-  "Deep Cut": { key: "deep-cut", points: 85, color: "var(--deep)" },
-  "Rare": { key: "rare", points: 60, color: "var(--rare)" },
-  "Schooler": { key: "schooler", points: 30, color: "var(--schooler)" },
-  "Too Clever": { key: "too-clever", points: 15, color: "var(--clever)" },
-  "Plankton": { key: "plankton", points: 10, color: "var(--plankton)" }
+  "One in a Krillion": { key:"one-in-a-krillion", points:100, color:"#ffd36a" },
+  "Deep Cut": { key:"deep-cut", points:85, color:"#f18cce" },
+  "Rare": { key:"rare", points:60, color:"#bd91ff" },
+  "Schooler": { key:"schooler", points:30, color:"#74b8ff" },
+  "Too Clever": { key:"too-clever", points:15, color:"#5ce0d2" },
+  "Plankton": { key:"plankton", points:10, color:"#a7b8c4" }
 };
 
+// Canonical build names plus the ways players might shorten, misspell, or remember them.
 const builds = [
-  { name: "The Blacksmith (at spawn)", rarity: "One in a Krillion", aliases: ["blacksmith", "black smith", "spawn blacksmith", "blacksmith at spawn", "smith at spawn", "smithy"] },
-  { name: "Bradleys Island Base", rarity: "Deep Cut", aliases: ["bradley island base", "bradleys island", "bradley island", "bradley base", "bradleys base", "island base", "island bradley base"] },
-  { name: "The Water Tower", rarity: "Deep Cut", aliases: ["water tower", "watertower", "tower water", "water tank", "the tower"] },
-  { name: "Patricks House", rarity: "Deep Cut", aliases: ["patrick house", "patrick's house", "patricks home", "patrick home", "pat house"] },
-  { name: "Olins Hungry Hippos but Pigs", rarity: "Deep Cut", aliases: ["olins hungry hippos", "olin hungry hippos", "hungry hippos pigs", "hungry hippos but pigs", "olins pigs", "olin pigs", "pigs hippos", "olins base", "olin base", "oaldn bafe", "oaldn base", "olden bafe", "olins bafe"] },
-  { name: "Bradleys House", rarity: "Rare", aliases: ["bradley house", "bradleys home", "bradley home", "house bradley", "bradleys house"] },
-  { name: "Bakery", rarity: "Rare", aliases: ["bakerie", "bake shop", "bread shop", "bread place", "the bakery"] },
-  { name: "The Bank", rarity: "Rare", aliases: ["bank", "the bank", "banks"] },
-  { name: "Huis Junker", rarity: "Too Clever", aliases: ["huis junker", "huis", "hous junker", "house junker", "huisjunker"] },
-  { name: "Jousting Arena", rarity: "Too Clever", aliases: ["jousting arena", "joust arena", "jousting", "arena", "the arena"] },
-  { name: "Goon Tower", rarity: "Plankton", aliases: ["goon tower", "goontower", "goon", "goon base"] },
-  { name: "Spawn House", rarity: "Plankton", aliases: ["spawn house", "spawnhouse", "spawn home", "starter house", "house at spawn", "spawn base"] }
+  {name:"The Blacksmith (at spawn)",rarity:"One in a Krillion",aliases:["blacksmith","black smith","spawn blacksmith","blacksmith at spawn","smith at spawn","smithy"]},
+  {name:"Bradleys Island Base",rarity:"Deep Cut",aliases:["bradley island base","bradleys island","bradley island","bradley base","bradleys base","island base","bradleys island bace","bradlys island base"]},
+  {name:"The Water Tower",rarity:"Deep Cut",aliases:["water tower","watertower","tower water","water tank","the tower","water towr","woter tower"]},
+  {name:"Patricks House",rarity:"Deep Cut",aliases:["patrick house","patrick's house","patricks home","patrick home","pat house","patricks hous"]},
+  {name:"Olins Hungry Hippos but Pigs",rarity:"Deep Cut",aliases:["olins hungry hippos","olin hungry hippos","hungry hippos pigs","hungry hippos but pigs","olins pigs","olin pigs","pigs hippos","olins base","olin base","oaldn bafe","oaldn base","olden bafe","olins bafe","oaldn bafe but pig","oaldn bafe pig","olins base pigs","olins hungry hippos but pig","hungry hippo pigs","hippos but pigs","olin build"]},
+  {name:"Bradleys House",rarity:"Rare",aliases:["bradley house","bradleys home","bradley home","house bradley","bradleys hous","bradlys house"]},
+  {name:"Bakery",rarity:"Rare",aliases:["bakerie","bake shop","bread shop","bread place","the bakery","bakry","bakey"]},
+  {name:"The Bank",rarity:"Rare",aliases:["bank","the bank","banks","bank build"]},
+  {name:"Aaravs Island",rarity:"Schooler",aliases:["aarav island","aaravs islnd","aaravs iland","aravs island","aaravs","aarav island base","island aarav"]},
+  {name:"Logans House",rarity:"Schooler",aliases:["logan house","logans hous","logans home","logan home","logans","logans base","logans hous"]},
+  {name:"Elytra Course",rarity:"Schooler",aliases:["elytra","elytra corse","elytra cours","elytra course","elytra parkour","elytra flying course","flight course","elyta course"]},
+  {name:"Sakura Trainstation",rarity:"Schooler",aliases:["sakura train station","sakura station","sakura trainstaton","sakura trainstatoin","sakura","trainstation sakura","train station sakura","sakura railway"]},
+  {name:"Huis Junker",rarity:"Too Clever",aliases:["huis","huis junker","hous junker","house junker","huisjunker","huyis junker"]},
+  {name:"Jousting Arena",rarity:"Too Clever",aliases:["joust arena","jousting","arena","the arena","jousting arna","jousting area"]},
+  {name:"Goon Tower",rarity:"Plankton",aliases:["goontower","goon","goon base","goon towre","goon towr"]},
+  {name:"Spawn House",rarity:"Plankton",aliases:["spawnhouse","spawn home","starter house","house at spawn","spawn base","spwn hous","spawn hous"]}
 ];
 
 const normalize = value => value.toLocaleLowerCase("en").normalize("NFD")
-  .replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "")
-  .replace(/[^a-z0-9]+/g, " ").trim().replace(/\s+/g, " ");
-const words = value => normalize(value).split(" ").filter(Boolean);
+  .replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"")
+  .replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
+const STOP_WORDS = new Set(["the","at","but","and","a","an","on","in","of","its","is"]);
+const words = value => normalize(value).split(" ").filter(word => word && !STOP_WORDS.has(word));
 
-function editDistance(a, b) {
-  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
-  for (let i = 1; i <= a.length; i++) {
-    let prev = row[0]; row[0] = i;
-    for (let j = 1; j <= b.length; j++) {
-      const old = row[j];
-      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
-      prev = old;
-    }
+// Damerau-Levenshtein catches ordinary typos AND adjacent swapped letters.
+function editDistance(a,b){
+  const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+  for(let i=0;i<=a.length;i++)d[i][0]=i;
+  for(let j=0;j<=b.length;j++)d[0][j]=j;
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+    const cost=a[i-1]===b[j-1]?0:1;
+    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+cost);
+    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
   }
-  return row[b.length];
+  return d[a.length][b.length];
 }
-
-function wordSimilarity(a, b) {
-  if (a === b) return 1;
-  if (a.length >= 3 && (a.startsWith(b) || b.startsWith(a))) return 0.91;
-  const longest = Math.max(a.length, b.length);
-  const distance = editDistance(a, b);
-  const ratio = 1 - distance / longest;
-  const allowance = longest <= 4 ? 1 : longest <= 7 ? 2 : 3;
-  return distance <= allowance && ratio >= 0.62 ? ratio : 0;
+function soundKey(word){
+  const s=word.toLowerCase().replace(/[^a-z]/g,""); if(!s)return "";
+  const groups={b:1,f:1,p:1,v:1,c:2,g:2,j:2,k:2,q:2,s:2,x:2,z:2,d:3,t:3,l:4,m:5,n:5,r:6};
+  let out=s[0].toUpperCase(),last=groups[s[0]]||0;
+  for(let i=1;i<s.length&&out.length<4;i++){const code=groups[s[i]]||0;if(code&&code!==last)out+=code;last=code;}
+  return (out+"000").slice(0,4);
 }
-
-function compareVariant(queryWords, variant) {
-  const targetWords = words(variant);
-  if (!queryWords.length || !targetWords.length) return 0;
-  const used = new Set();
-  let matched = 0, sum = 0;
-  for (const queryWord of queryWords) {
-    let best = 0, bestIndex = -1;
-    targetWords.forEach((targetWord, index) => {
-      if (used.has(index)) return;
-      const similarity = wordSimilarity(queryWord, targetWord);
-      if (similarity > best) { best = similarity; bestIndex = index; }
-    });
-    if (best >= 0.62) {
-      used.add(bestIndex); matched++; sum += best;
-    }
+function tokenScore(a,b){
+  if(a===b)return 1;
+  if(Math.min(a.length,b.length)>=3&&(a.startsWith(b)||b.startsWith(a)))return .94;
+  const dist=editDistance(a,b),long=Math.max(a.length,b.length),ratio=1-dist/long;
+  const allowed=long<=4?1:long<=7?2:3;
+  if(dist<=allowed&&ratio>=.55)return Math.max(.58,ratio);
+  if(a.length>=4&&b.length>=4&&soundKey(a)===soundKey(b))return .84;
+  return 0;
+}
+function variantScore(query,variant){
+  const qw=words(query),vw=words(variant);if(!qw.length||!vw.length)return 0;
+  // Compare every typed word with its best available target token; this allows omitted words.
+  let sum=0,matched=0;
+  const taken=new Set();
+  for(const q of qw){
+    let best=0,index=-1;
+    vw.forEach((v,i)=>{if(taken.has(i))return;const s=tokenScore(q,v);if(s>best){best=s;index=i;}});
+    if(best>=.55){sum+=best;matched++;taken.add(index);}
   }
-  const inputCoverage = sum / queryWords.length;
-  const targetCoverage = matched / targetWords.length;
-  // Reward every correctly understood typed word; allow short answers to omit words.
-  return inputCoverage * 0.78 + targetCoverage * 0.22;
+  if(!matched)return 0;
+  const coverage=sum/qw.length;
+  const evidence=Math.min(matched,3)/Math.min(vw.length,3);
+  // Prioritize whether the player's words were understood, not whether they typed every word.
+  return coverage*.88+evidence*.12;
 }
-
-function rankMatches(raw) {
-  const query = normalize(raw);
-  if (!query) return [];
-  const queryWords = words(query);
-  return builds.map(build => {
-    const variants = [build.name, ...build.aliases];
-    let score = 0, exact = false;
-    for (const variant of variants) {
-      const normalizedVariant = normalize(variant);
-      if (query === normalizedVariant) { score = 1; exact = true; break; }
-      score = Math.max(score, compareVariant(queryWords, variant));
+function rankMatches(raw){
+  const query=normalize(raw);if(!query)return [];
+  return builds.map(build=>{
+    let score=0,exact=false;
+    for(const variant of [build.name,...build.aliases]){
+      const v=normalize(variant);
+      if(query===v){score=1;exact=true;break;}
+      score=Math.max(score,variantScore(query,v));
     }
-    return { build, score, exact };
-  }).filter(item => item.score >= 0.55)
-    .sort((a, b) => b.score - a.score || a.build.name.localeCompare(b.build.name));
+    return {build,score,exact};
+  }).sort((a,b)=>b.score-a.score);
+}
+function bestMatch(raw){
+  const ranked=rankMatches(raw);if(!ranked.length||ranked[0].score<.57)return null;
+  if(ranked[0].exact)return ranked[0];
+  const second=ranked[1];
+  // For a very short vague word (e.g. "house"), ask for more detail rather than guessing.
+  const queryWords=words(raw);
+  if(queryWords.join("").length<5)return null;
+  if(second&&ranked[0].score-second.score<.075)return null;
+  return ranked[0].score>=.66?ranked[0]:null;
 }
 
-function bestUnambiguousMatch(raw) {
-  const ranked = rankMatches(raw);
-  if (!ranked.length) return null;
-  if (ranked[0].exact) return ranked[0];
-  const second = ranked[1];
-  // A close tie (for example, typing only "house") should ask the player to choose.
-  if (second && ranked[0].score - second.score < 0.075) return null;
-  return ranked[0].score >= 0.72 ? ranked[0] : null;
-}
-
-const counts = Object.fromEntries(Object.values(tiers).map(t => [t.key, 0]));
-let totalPoints = 0;
-let history = [];
-const answerInput = document.getElementById("answer");
-const suggestions = document.getElementById("suggestions");
-const assist = document.getElementById("assist");
-const result = document.getElementById("result");
-
-function renderSuggestions() {
-  const raw = answerInput.value;
-  const ranked = rankMatches(raw).slice(0, 3);
-  suggestions.replaceChildren();
-  if (!normalize(raw) || !ranked.length || (ranked[0].exact && ranked[0].build.name === raw.trim())) {
-    suggestions.classList.remove("show");
-    assist.textContent = "Auto-correct is on — spelling mistakes and missing words are okay.";
-    return;
+const counts=Object.fromEntries(Object.values(tiers).map(t=>[t.key,0]));
+let totalPoints=0,history=[],rollingTimer=null,rollingInterval=null,locked=false;
+const answerInput=document.getElementById("answer"),assist=document.getElementById("assist"),result=document.getElementById("result"),submitButton=document.getElementById("submitButton");
+const countIds={"one-in-a-krillion":"krillion","deep-cut":"deep","rare":"rare","schooler":"schooler","too-clever":"clever","plankton":"plankton"};
+function setAssist(text,type=""){assist.textContent=text;assist.className="assist"+(type?" "+type:"");}
+function liveAutocorrect(){
+  const raw=answerInput.value.trim();
+  if(!raw){setAssist("AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.");return;}
+  const match=bestMatch(raw);
+  if(match){
+    const changed=normalize(raw)!==normalize(match.build.name);
+    setAssist(changed?`AUTO-CORRECT: “${raw}” → ${match.build.name}`:`Recognized: ${match.build.name}`,"success");
+  }else{
+    const ranked=rankMatches(raw);
+    if(ranked[0]&&ranked[0].score>=.48)setAssist(`Almost got it — best match is ${ranked[0].build.name}. Add one more word if that's not it.`);
+    else setAssist("Auto-correct is listening. You can leave out words and make spelling mistakes.");
   }
-  ranked.forEach(({ build, score }) => {
-    const button = document.createElement("button");
-    button.type = "button"; button.className = "suggestion"; button.setAttribute("role", "option");
-    const label = document.createElement("span"); label.textContent = build.name;
-    const meta = document.createElement("small"); meta.textContent = build.rarity;
-    button.append(label, meta);
-    button.addEventListener("click", () => lockIn(build, raw, true));
-    suggestions.append(button);
-  });
-  suggestions.classList.add("show");
-  assist.textContent = "Possible match — choose a suggestion or press LOCK IN to auto-correct.";
 }
-
-function showResult(build, original, corrected) {
-  const tier = tiers[build.rarity];
-  result.className = "result show " + tier.key;
-  document.getElementById("resultRarity").textContent = build.rarity;
-  document.getElementById("resultRarity").style.color = tier.color;
-  document.getElementById("resultBuild").textContent = build.name;
-  const meta = document.getElementById("resultMeta");
-  meta.textContent = `+${tier.points} points · +${tier.points * 10} m` + (corrected ? ` · Auto-corrected from “${original}”` : "");
-  document.getElementById("fakeout").hidden = build.rarity !== "Too Clever";
+function particles(color){
+  const holder=document.getElementById("particles");holder.replaceChildren();
+  for(let i=0;i<22;i++){
+    const p=document.createElement("i");p.className="particle";
+    p.style.setProperty("--x",(12+Math.random()*76)+"%");p.style.setProperty("--dx",(Math.random()*260-130)+"px");p.style.setProperty("--dy",(-45-Math.random()*150)+"px");p.style.setProperty("--c",color);holder.append(p);
+  }
+  setTimeout(()=>holder.replaceChildren(),1000);
 }
-
-function lockIn(build, original, wasSuggested = false) {
-  const tier = tiers[build.rarity];
-  const corrected = normalize(original) !== normalize(build.name);
-  showResult(build, original, corrected);
-  suggestions.classList.remove("show");
-  assist.textContent = corrected ? `Auto-corrected to ${build.name}.` : "Build matched!";
-  counts[tier.key]++;
-  totalPoints += tier.points;
-  history.unshift({ name: build.name, rarity: build.rarity, key: tier.key, points: tier.points });
-  history = history.slice(0, 20);
+function showFinal(build,original){
+  const tier=tiers[build.rarity],corrected=normalize(original)!==normalize(build.name);
+  result.className="result show "+tier.key;
+  document.getElementById("resultLabel").textContent="BUILD DISCOVERED";
+  document.getElementById("resultRarity").textContent=build.rarity;
+  document.getElementById("resultRarity").style.color=tier.color;
+  document.getElementById("resultBuild").textContent=build.name;
+  document.getElementById("resultMeta").textContent=`+${tier.points} points · +${(tier.points*10).toLocaleString()} m`+(corrected?` · Auto-corrected “${original}”`:"");
+  document.getElementById("fakeout").hidden=build.rarity!=="Too Clever";
+  document.getElementById("rollTrack").hidden=true;
+  if(["Rare","Deep Cut","One in a Krillion"].includes(build.rarity))particles(tier.color);
+  counts[tier.key]++;totalPoints+=tier.points;
+  history.unshift({name:build.name,rarity:build.rarity,key:tier.key,points:tier.points});history=history.slice(0,30);
   renderStats();
-  answerInput.value = build.name;
+  setAssist(corrected?`AUTO-CORRECTED TO: ${build.name}`:"Exact build recognized!","success");
+  answerInput.value=build.name;
+  locked=false;submitButton.disabled=false;submitButton.textContent="LOCK IN ↗";
 }
-
-function renderStats() {
-  document.getElementById("depthValue").textContent = `${(totalPoints * 10).toLocaleString()} m`;
-  document.getElementById("foundTotal").textContent = history.length;
-  Object.values(tiers).forEach(tier => {
-    const countNode = document.getElementById("count-" + tier.key.replace("one-in-a-krillion", "krillion").replace("deep-cut", "deep").replace("too-clever", "clever"));
-    if (countNode) countNode.textContent = counts[tier.key];
-  });
-  const recent = document.getElementById("recent");
-  recent.replaceChildren();
-  if (!history.length) {
-    const empty = document.createElement("div"); empty.className = "empty"; empty.textContent = "No builds found yet."; recent.append(empty); return;
-  }
-  history.slice(0, 5).forEach(item => {
-    const row = document.createElement("div"); row.className = "recent-row";
-    const name = document.createElement("strong"); name.textContent = item.name;
-    const rarity = document.createElement("span"); rarity.textContent = item.rarity + " · " + item.points;
-    const rarityColors = {
-      "one-in-a-krillion": "#ffd36a", "deep-cut": "#f18cce", "rare": "#bd91ff",
-      "schooler": "#74b8ff", "too-clever": "#5ce0d2", "plankton": "#a7b8c4"
-    };
-    rarity.style.color = rarityColors[item.key] || "#fff";
-    row.append(name, rarity); recent.append(row);
-  });
+function startRoll(build,original){
+  if(locked)return;locked=true;submitButton.disabled=true;submitButton.textContent="ROLLING...";
+  const labels=Object.keys(tiers),start=Date.now(),duration=1450;
+  result.className="result show rolling";
+  document.getElementById("resultLabel").textContent="SEARCHING THE DEPTHS";
+  document.getElementById("fakeout").hidden=true;
+  document.getElementById("rollTrack").hidden=false;
+  const spin=()=>{
+    const randomBuild=builds[Math.floor(Math.random()*builds.length)];
+    const randomTier=labels[Math.floor(Math.random()*labels.length)];
+    document.getElementById("resultRarity").textContent=randomTier;
+    document.getElementById("resultRarity").style.color=tiers[randomTier].color;
+    document.getElementById("resultBuild").textContent=randomBuild.name;
+    document.getElementById("resultMeta").textContent="Matching your answer...";
+  };
+  spin();rollingInterval=setInterval(spin,85);
+  rollingTimer=setTimeout(()=>{
+    clearInterval(rollingInterval);rollingInterval=null;rollingTimer=null;showFinal(build,original);
+  },duration);
 }
-
-document.getElementById("answerForm").addEventListener("submit", event => {
-  event.preventDefault();
-  const raw = answerInput.value.trim();
-  if (!raw) { assist.textContent = "Type a build name first."; return; }
-  const match = bestUnambiguousMatch(raw);
-  if (match) {
-    lockIn(match.build, raw);
-    return;
+function renderStats(){
+  document.getElementById("depthValue").textContent=(totalPoints*10).toLocaleString()+" m";
+  document.getElementById("foundTotal").textContent=history.length;
+  Object.values(tiers).forEach(t=>{const el=document.getElementById("count-"+countIds[t.key]);if(el)el.textContent=counts[t.key];});
+  const recent=document.getElementById("recent");recent.replaceChildren();
+  if(!history.length){const e=document.createElement("div");e.className="empty";e.textContent="No builds found yet.";recent.append(e);return;}
+  history.slice(0,5).forEach(item=>{const row=document.createElement("div");row.className="recent-row";const name=document.createElement("strong");name.textContent=item.name;const label=document.createElement("span");label.textContent=item.rarity+" · "+item.points;label.style.color=tiers[item.rarity].color;row.append(name,label);recent.append(row);});
+}
+document.getElementById("answerForm").addEventListener("submit",event=>{
+  event.preventDefault();if(locked)return;
+  const raw=answerInput.value.trim();if(!raw){setAssist("Type a build name first.","error");answerInput.focus();return;}
+  const match=bestMatch(raw);
+  if(match){startRoll(match.build,raw);return;}
+  const ranked=rankMatches(raw);
+  if(ranked[0]&&ranked[0].score>=.48){
+    setAssist(`I think you mean ${ranked[0].build.name}, but that guess is a little ambiguous. Type one more clue and I'll auto-correct it.`,"");
+  }else{
+    setAssist("Couldn't recognize that one yet. Try a shorter nickname, another spelling, or one more word.","error");
   }
-  const ranked = rankMatches(raw);
-  suggestions.classList.toggle("show", ranked.length > 0);
-  if (ranked.length) {
-    assist.textContent = "I found a few close matches. Pick the right build from the suggestions.";
-  } else {
-    assist.textContent = "I couldn't match that yet. Try fewer words, or a different spelling.";
-    result.className = "result show";
-    document.getElementById("resultRarity").textContent = "NO MATCH";
-    document.getElementById("resultRarity").style.color = "#91a9b7";
-    document.getElementById("resultBuild").textContent = "Try another build name";
-    document.getElementById("resultMeta").textContent = "Nothing was added to your discoveries.";
-    document.getElementById("fakeout").hidden = true;
-  }
+  result.className="result show";document.getElementById("resultLabel").textContent="NO MATCH YET";document.getElementById("resultRarity").textContent="???";document.getElementById("resultRarity").style.color="#91a9b7";document.getElementById("resultBuild").textContent="Keep trying — auto-correct is on";document.getElementById("resultMeta").textContent="Nothing was added to your discoveries.";document.getElementById("fakeout").hidden=true;document.getElementById("rollTrack").hidden=true;
 });
-
-answerInput.addEventListener("input", renderSuggestions);
-answerInput.addEventListener("keydown", event => {
-  if (event.key === "Escape") suggestions.classList.remove("show");
-  if (event.key === "ArrowDown" && suggestions.classList.contains("show")) {
-    event.preventDefault(); suggestions.querySelector("button")?.focus();
-  }
+answerInput.addEventListener("input",liveAutocorrect);
+document.getElementById("reset").addEventListener("click",()=>{
+  if(rollingTimer)clearTimeout(rollingTimer);if(rollingInterval)clearInterval(rollingInterval);rollingTimer=null;rollingInterval=null;locked=false;submitButton.disabled=false;submitButton.textContent="LOCK IN ↗";
+  answerInput.value="";result.className="result";document.getElementById("particles").replaceChildren();document.getElementById("rollTrack").hidden=true;setAssist("AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.");answerInput.focus();
 });
-document.getElementById("reset").addEventListener("click", () => {
-  answerInput.value = ""; suggestions.classList.remove("show"); result.className = "result";
-  assist.textContent = "Auto-correct is on — spelling mistakes and missing words are okay.";
-  answerInput.focus();
-});
-
 renderStats();
 </script>
 </body>
