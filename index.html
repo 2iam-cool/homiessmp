@@ -2,331 +2,227 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#06131f">
-<title>Name a build on the server</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f9fa">
+<title>Homies | SMP — Wiki</title>
 <style>
-  :root {
-    color-scheme: dark;
-    --bg:#06131f; --panel:#0b1d2b; --panel2:#102638; --line:#27485a;
-    --text:#f2f8fb; --muted:#91a9b7;
-    --plankton:#a7b8c4; --clever:#5ce0d2; --schooler:#74b8ff;
-    --rare:#bd91ff; --deep:#f18cce; --krillion:#ffd36a;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;min-height:100vh;padding:26px 16px 42px;display:grid;place-items:start center;
-    color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-    background:radial-gradient(ellipse at 50% -18%,#1e5361 0%,transparent 45%),radial-gradient(ellipse at 100% 70%,#102f48 0%,transparent 45%),linear-gradient(180deg,#081a29,#06131f 62%,#040d17);
-    overflow-x:hidden;
-  }
-  body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.17;background-image:radial-gradient(#a4d4e4 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(#000,transparent 80%)}
-  .bubbles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
-  .bubble{position:absolute;bottom:-50px;width:7px;height:7px;border:1px solid #8bd2df66;border-radius:50%;background:#8bd2df12;animation:float-up linear infinite}
-  .bubble:nth-child(1){left:8%;animation-duration:17s;animation-delay:-5s}.bubble:nth-child(2){left:22%;width:4px;height:4px;animation-duration:21s;animation-delay:-12s}.bubble:nth-child(3){left:48%;animation-duration:19s;animation-delay:-8s}.bubble:nth-child(4){left:68%;width:5px;height:5px;animation-duration:24s;animation-delay:-16s}.bubble:nth-child(5){left:88%;animation-duration:18s;animation-delay:-3s}
-  @keyframes float-up{to{transform:translateY(-110vh) translateX(24px);opacity:0}}
-  .app{width:min(700px,100%);position:relative;z-index:1}
-  .topline{display:flex;justify-content:center;align-items:center;gap:9px;margin:0 0 18px;color:#8bb9c8;font-size:.7rem;font-weight:950;letter-spacing:.18em;text-transform:uppercase}
-  .topline i{width:7px;height:7px;border-radius:50%;background:#5ce0d2;box-shadow:0 0 13px #5ce0d2}
-  .game-card{border:1px solid #2b4c5e;border-radius:23px;background:linear-gradient(155deg,#102b3b,#0a1c2a 52%,#091724);box-shadow:0 24px 90px #0008,inset 0 1px #ffffff0b;padding:clamp(20px,5vw,36px);overflow:hidden}
-  .question-kicker{text-align:center;color:#83b6c7;font-size:.69rem;font-weight:950;letter-spacing:.2em;text-transform:uppercase;margin-bottom:13px}
-  h1{text-align:center;font-size:clamp(1.5rem,5vw,2.25rem);line-height:1.13;letter-spacing:-.04em;margin:0 auto 11px;max-width:540px}
-  .instructions{text-align:center;color:var(--muted);font-size:.9rem;line-height:1.5;margin:0 auto 23px}
-  .answer-row{display:flex;gap:9px;align-items:stretch}
-  input{flex:1;min-width:0;height:55px;border-radius:13px;padding:0 16px;border:1px solid #36586a;background:#061521;color:var(--text);outline:none;font:inherit;font-size:1rem;box-shadow:inset 0 2px 9px #0003}
-  input::placeholder{color:#688391}input:focus{border-color:#5ce0d2;box-shadow:0 0 0 3px #5ce0d222,inset 0 2px 9px #0003}
-  button{font:inherit;cursor:pointer;border:0;font-weight:950;transition:transform .13s ease,filter .13s ease}
-  button:hover{filter:brightness(1.1);transform:translateY(-1px)}button:active{transform:translateY(1px)}button:disabled{opacity:.65;cursor:wait;transform:none}
-  .submit{min-width:132px;padding:0 17px;border-radius:13px;color:#052127;background:linear-gradient(135deg,#70efda,#65c9ee);box-shadow:0 5px 22px #48cfca24}
-  .assist{min-height:23px;margin:9px 3px 0;color:#8dcfc8;font-size:.79rem;line-height:1.45}
-  .assist.error{color:#ffadad}.assist.success{color:#8fe7ce}
-  .result{display:none;margin-top:22px;position:relative;text-align:center;border-radius:18px;padding:26px 16px 22px;background:#061521;border:1px solid #2b4c5e;isolation:isolate;overflow:hidden}
-  .result.show{display:block;animation:card-in .42s cubic-bezier(.2,.8,.2,1) both}
-  @keyframes card-in{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
-  .result:before{content:"";position:absolute;inset:-70% -30%;z-index:-1;opacity:0;background:conic-gradient(from 0deg,transparent,#ffffff14,transparent 35%);transform:rotate(0deg)}
-  .result.rolling:before{opacity:1;animation:shine-spin 1.2s linear infinite}
-  @keyframes shine-spin{to{transform:rotate(360deg)}}
-  .result-label{color:#91a9b7;font-size:.67rem;font-weight:950;letter-spacing:.2em;text-transform:uppercase}
-  .result-rarity{margin:9px 0 5px;font-size:clamp(1.7rem,6vw,2.65rem);line-height:1.06;font-weight:1000;letter-spacing:-.045em}
-  .result-build{font-size:1.12rem;font-weight:850;margin-top:10px;min-height:1.5em}
-  .result-meta{color:#91a9b7;font-size:.8rem;margin-top:9px;line-height:1.5}
-  .result.rolling .result-rarity,.result.rolling .result-build{filter:blur(.35px);animation:slot-jitter .11s linear infinite alternate}
-  @keyframes slot-jitter{from{transform:translateY(-3px);opacity:.66}to{transform:translateY(3px);opacity:1}}
-  .roll-track{height:4px;max-width:310px;margin:19px auto 0;border-radius:99px;background:#193447;overflow:hidden}
-  .roll-track span{display:block;width:35%;height:100%;border-radius:99px;background:linear-gradient(90deg,#5ce0d2,#74b8ff,#f18cce);animation:roll-progress .85s ease-in-out infinite}
-  @keyframes roll-progress{from{transform:translateX(-120%)}to{transform:translateX(400%)}}
-  .fakeout{display:inline-flex;margin-top:13px;padding:6px 12px;border:1px solid #5ce0d277;border-radius:99px;color:#5ce0d2;font-size:.69rem;font-weight:1000;letter-spacing:.13em}
-  .result.plankton{border-color:var(--plankton);box-shadow:0 0 25px #a7b8c41a}
-  .result.too-clever{border-color:var(--clever);box-shadow:0 0 27px #5ce0d226}
-  .result.schooler{border-color:var(--schooler);box-shadow:0 0 30px #74b8ff38}
-  .result.rare{border-color:var(--rare);box-shadow:0 0 31px #bd91ff45}
-  .result.deep-cut{border-color:var(--deep);box-shadow:0 0 35px #f18cce52}
-  .result.one-in-a-krillion{border-color:var(--krillion);box-shadow:0 0 45px #ffd36a70;animation:card-in .42s ease both,legend-glow 1.1s ease-in-out infinite alternate}
-  @keyframes legend-glow{to{box-shadow:0 0 65px #ffd36aaa,inset 0 0 25px #ffd36a12}}
-  .fakeout[hidden]{display:none}
-  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
-  .particle{position:absolute;left:var(--x);top:58%;width:6px;height:6px;border-radius:2px;background:var(--c);box-shadow:0 0 10px var(--c);animation:burst .85s ease-out forwards}
-  @keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(280deg) scale(.1);opacity:0}}
-  .dashboard{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:14px}
-  .panel{min-width:0;border:1px solid #203d4f;border-radius:16px;padding:16px;background:#091a28d9}
-  .panel-heading{display:flex;justify-content:space-between;align-items:center;margin:0 0 12px;color:#a9c3cd;font-size:.69rem;font-weight:950;letter-spacing:.14em;text-transform:uppercase}
-  .tier{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:7px 0;border-bottom:1px solid #ffffff0d;font-size:.84rem}.tier:last-child{border-bottom:0}
-  .tier-name{display:flex;align-items:center;gap:8px}.tier-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%}.tier-points{color:#7995a5;white-space:nowrap;font-size:.73rem}.tier-count{color:#c0d4dc;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.76rem}
-  .depth{margin-top:14px;border:1px solid #203d4f;border-radius:15px;background:#091a28d9;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;gap:15px}
-  .depth-label{color:#91a9b7;font-weight:850;letter-spacing:.12em;font-size:.68rem}.depth-value{color:#70efda;font-size:1.2rem;font-weight:1000;font-variant-numeric:tabular-nums}
-  .recent{display:grid;gap:9px;color:#91a9b7;font-size:.8rem}.recent-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}.recent-row strong{color:#dcebf0;font-size:.79rem;font-weight:700;overflow-wrap:anywhere}.recent-row span{font-weight:900;text-align:right;font-size:.7rem}.empty{color:#718b98;line-height:1.5}
-  .footer{display:flex;justify-content:center;margin-top:14px}.reset{padding:9px 13px;background:transparent;border:1px solid #28495b;color:#91a9b7;border-radius:10px;font-size:.75rem}
-  @media(max-width:560px){body{padding:16px 11px 30px}.answer-row{flex-direction:column}.submit{min-height:49px}.dashboard{grid-template-columns:1fr}.game-card{border-radius:19px}}
-  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}}
+:root{--bg:#f8f9fa;--paper:#fff;--ink:#202122;--muted:#54595d;--line:#a2a9b1;--soft:#eaecf0;--link:#36c;--linkv:#795cb2;--accent:#3366cc;--green:#14866d;--shadow:0 1px 3px #20212218}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}button,input{font:inherit}
+.top{height:66px;background:#fff;border-bottom:1px solid var(--soft);display:flex;align-items:center;gap:20px;padding:0 max(22px,calc((100vw - 1450px)/2));position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px;min-width:250px;color:var(--ink)}.brand:hover{text-decoration:none}.brandmark{width:39px;height:39px;border-radius:50%;background:#253858;color:#fff;display:grid;place-items:center;font:900 20px Georgia,serif}.brandname{font:20px Georgia,serif;line-height:1.1}.brandname small{display:block;font:10px Arial,sans-serif;letter-spacing:1.4px;color:#72777d;text-transform:uppercase;margin-top:4px}
+.search{margin-left:auto;position:relative;width:min(390px,38vw)}.search input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--line);border-radius:2px;background:#fff;outline:none}.search input:focus{border:2px solid var(--link);padding:8px 11px 8px 35px}.search span{position:absolute;left:11px;top:5px;color:#72777d;font-size:18px}
+.shell{max-width:1450px;margin:auto;display:grid;grid-template-columns:205px minmax(0,1fr);gap:30px;padding:25px 24px 65px}.sidebar{position:sticky;top:88px;align-self:start;border-right:1px solid var(--soft);padding:5px 16px 20px 0;max-height:calc(100vh - 105px);overflow:auto}.sidehead{font-size:11px;color:#72777d;text-transform:uppercase;letter-spacing:1.2px;font-weight:700;margin:12px 0 7px 9px}.sidebtn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 9px;border:0;background:transparent;color:var(--link);text-align:left;cursor:pointer;border-radius:2px;font-size:13px}.sidebtn:hover{background:#eaecf0;text-decoration:none}.sidebtn.active{background:#eaf3ff;color:#202122;font-weight:700;border-left:3px solid var(--accent);padding-left:6px}.sideicon{width:17px;color:#72777d;text-align:center}
+main{min-width:0}.tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:0 0 19px;overflow:auto}.tab{padding:8px 14px;color:var(--link);white-space:nowrap;border-bottom:2px solid transparent;cursor:pointer;background:none;border-top:0;border-left:0;border-right:0}.tab:hover{background:#eaecf0;text-decoration:none}.tab.active{color:var(--ink);border-bottom-color:#202122;font-weight:700}
+.page{display:none}.page.active{display:block}.page-title{font:normal 31px/1.25 Georgia,"Times New Roman",serif;border-bottom:1px solid var(--line);padding:0 0 8px;margin:0 0 13px}.subtitle{color:#72777d;font-size:12px;margin:-5px 0 18px}.lead{font-size:15px;line-height:1.75;margin:0 0 16px}.lead strong{font-weight:700}
+.infobox{float:right;width:285px;margin:0 0 18px 22px;border:1px solid var(--line);background:#f8f9fa;padding:9px;font-size:12px;box-shadow:var(--shadow)}.infobox h3{font: bold 16px Georgia,serif;text-align:center;margin:2px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}.infobox .infopic{height:84px;display:grid;place-items:center;background:linear-gradient(135deg,#dce8f5,#f2f5f8);font-size:34px;margin-bottom:8px}.infobox table{width:100%;border-collapse:collapse}.infobox td{padding:5px 4px;border-top:1px solid #eaecf0;vertical-align:top}.infobox td:first-child{font-weight:700;width:39%}
+.toc{float:left;width:245px;background:#f8f9fa;border:1px solid var(--line);padding:10px 13px;margin:0 18px 15px 0;font-size:12px}.toc h3{font-size:13px;text-align:center;margin:0 0 6px}.toc ol{margin:0;padding-left:22px}.toc a{color:var(--link)}h2.section{font:normal 22px Georgia,serif;border-bottom:1px solid var(--soft);padding-bottom:4px;margin:26px 0 10px;clear:none}h3.subsection{font:normal 17px Georgia,serif;margin:18px 0 6px}
+p{margin:9px 0}.muted{color:#72777d}.note{background:#f8f9fa;border:1px solid var(--soft);padding:10px 13px;margin:13px 0;font-size:12px}.notice{border-left:3px solid #6b9fce;background:#f2f7fc;padding:10px 13px;margin:15px 0;font-size:13px}
+.timeline{border-left:2px solid #c8ccd1;margin:13px 0 22px 8px;padding-left:18px}.event{position:relative;padding:8px 10px 9px;margin:0 0 7px;border:1px solid transparent;border-radius:2px}.event:before{content:"";position:absolute;width:8px;height:8px;background:#6b9fce;border:2px solid #fff;box-shadow:0 0 0 1px #6b9fce;border-radius:50%;left:-24px;top:16px}.event:hover{background:#f8f9fa;border-color:var(--soft)}.event strong{font-weight:650}.event .date{font-size:11px;color:#72777d;display:block}.event p{margin:2px 0 0}.event.hide{display:none}.event-link{display:block;color:inherit}.event-link:hover{text-decoration:none}.event-link strong{color:var(--link)}.article-image{display:block;max-width:100%;height:auto;max-height:560px;object-fit:contain;margin:14px auto 5px;border:1px solid var(--soft);background:#f8f9fa}.image-caption{text-align:center;color:#72777d;font-size:12px;margin:0 0 18px}.event-article .lead{max-width:900px}
+.cardgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}.wiki-card{border:1px solid var(--line);background:#fff;padding:14px 15px;min-height:110px;box-shadow:var(--shadow)}.wiki-card h3{font:normal 17px Georgia,serif;margin:0 0 4px}.wiki-card p{font-size:12px;color:#54595d;margin:0}.tag{display:inline-block;font-size:10px;padding:2px 6px;background:#eaecf0;color:#54595d;margin:7px 4px 0 0}.tag.green{background:#e5f5ef;color:#176b54}.tag.red{background:#fce8e6;color:#a33}
+table.wikitable{border:1px solid var(--line);border-collapse:collapse;background:#f8f9fa;width:100%;font-size:13px;margin:12px 0}table.wikitable th,table.wikitable td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}table.wikitable th{background:#eaecf0}table.wikitable tr:nth-child(even) td{background:#fff}
+.back{font-size:12px;margin:0 0 10px;display:inline-block}.search-results{display:none;border:1px solid var(--line);background:#fff;padding:10px;margin:0 0 15px}.search-results a{display:block;padding:4px 2px}.search-results.show{display:block}
+.footer{border-top:1px solid var(--soft);margin-top:35px;padding:12px 0;color:#72777d;font-size:11px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:9px;margin:14px 0}.player-card{border:1px solid var(--line);background:#fff;padding:10px 12px;box-shadow:var(--shadow)}.player-card a{font-weight:650}.player-meta{font-size:11px;color:#72777d;margin-top:3px}.player-details{margin:18px 0;border:1px solid var(--line);background:#fff;padding:10px 13px}.player-details summary{cursor:pointer;color:var(--link);font-weight:700}.challenge-card{border:1px solid var(--line);background:#f8f9fa;padding:14px;margin:14px 0;max-width:760px}.challenge-card img{display:block;max-width:100%;height:auto;margin:12px auto 0}.achievement-link{display:inline-block;margin:5px 0;padding:5px 9px;background:#eaf3ff;border:1px solid #c8d9f0;border-radius:2px}
+@media(max-width:900px){.shell{grid-template-columns:1fr;gap:15px;padding:15px}.sidebar{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--soft);display:flex;gap:5px;overflow:auto;padding:0 0 9px}.sidehead{display:none}.sidebtn{width:auto;white-space:nowrap}.brand{min-width:0}.top{padding:0 14px}.infobox{width:245px}}
+@media(max-width:600px){.top{gap:10px}.brandname{font-size:16px}.brandmark{width:34px;height:34px}.search{width:auto;flex:1}.shell{padding:12px}.page-title{font-size:26px}.infobox{float:none;width:100%;margin:12px 0}.toc{float:none;width:100%;margin:10px 0}.cardgrid{grid-template-columns:1fr}.tabs{margin-bottom:14px}}
 </style>
 </head>
 <body>
-<div class="bubbles" aria-hidden="true"><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
-<main class="app">
-  <div class="topline"><i></i> ONE QUESTION · UNLIMITED GUESSES <i></i></div>
-  <section class="game-card">
-    <div class="question-kicker">YOUR PROMPT</div>
-    <h1>Name a build on the server.</h1>
-    <p class="instructions">Type any build you remember. Spelling mistakes and missing words are okay.<br>Destroyed builds still count.</p>
-    <form id="answerForm" autocomplete="off">
-      <div class="answer-row">
-        <input id="answer" type="text" placeholder="Type a build..." aria-label="Name a build" spellcheck="false">
-        <button class="submit" id="submitButton" type="submit">LOCK IN ↗</button>
-      </div>
-    </form>
-    <div id="assist" class="assist" aria-live="polite">AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.</div>
-    <div id="result" class="result" aria-live="polite">
-      <div class="particles" id="particles"></div>
-      <div class="result-label" id="resultLabel">YOUR ANSWER</div>
-      <div id="resultRarity" class="result-rarity"></div>
-      <div id="resultBuild" class="result-build"></div>
-      <div id="resultMeta" class="result-meta"></div>
-      <div id="fakeout" class="fakeout" hidden>TOO CLEVER · FAKE OUT</div>
-      <div id="rollTrack" class="roll-track" hidden><span></span></div>
-    </div>
-  </section>
-  <div class="depth">
-    <div><div class="depth-label">YOUR DIVE DEPTH</div><div style="color:#718b98;font-size:.72rem;margin-top:4px">10 metres per point</div></div>
-    <div class="depth-value" id="depthValue">0 m</div>
+<header class="top">
+ <a class="brand" href="#" data-go="history"><div class="brandname">Homies | SMP</div></a>
+ <div class="search"><span>⌕</span><input id="globalSearch" type="search" placeholder="Search Homies | SMP Wiki" aria-label="Search wiki pages"></div>
+</header>
+<div class="shell">
+<aside class="sidebar">
+ <div class="sidehead">Navigation</div>
+ <button class="sidebtn active" data-go="history"><span class="sideicon">⌂</span>Main history</button>
+ <button class="sidebtn" data-go="factions"><span class="sideicon">⚑</span>Factions</button>
+ <button class="sidebtn" data-go="builds"><span class="sideicon">⌂</span>Builds & locations</button>
+ <button class="sidebtn" data-go="players"><span class="sideicon">♙</span>Players</button>
+ <button class="sidebtn" data-go="achievements"><span class="sideicon">🏆</span>Achievements</button>
+ <div class="sidehead">Historical eras</div>
+ <button class="sidebtn" data-go="before"><span class="sideicon">◷</span>Early Days</button>
+ <button class="sidebtn" data-go="preend"><span class="sideicon">⚒</span>Pre-End Dimension Era</button>
+ <button class="sidebtn" data-go="elytra"><span class="sideicon">✧</span>Age of Elytra</button>
+ <div class="sidehead">Featured pages</div>
+ <button class="sidebtn" data-go="french-empire">French Empire</button>
+ <button class="sidebtn" data-go="tk-land">TK Land</button>
+ <button class="sidebtn" data-go="israel">Israel</button>
+ <button class="sidebtn" data-go="blood-iron">Blood and Iron</button>
+</aside>
+<main>
+ <nav class="tabs">
+  <button class="tab active" data-go="history">Main history</button>
+  <button class="tab" data-go="factions">Factions</button>
+  <button class="tab" data-go="builds">Builds</button>
+  <button class="tab" data-go="players">Players</button>
+  <button class="tab" data-go="achievements">Achievements</button>
+  <button class="tab" data-go="about">About this wiki</button>
+ </nav>
+ <div id="searchResults" class="search-results"></div>
+
+ <section class="page active" id="history">
+  <h1 class="page-title">Homies | SMP</h1>
+  <div class="subtitle">From the Homies | SMP Wiki, the community encyclopedia</div>
+  <div class="infobox"><h3>Homies | SMP</h3><div class="infopic">⛏️🌎</div><table>
+   <tr><td>Type</td><td>Minecraft survival multiplayer server</td></tr><tr><td>World</td><td>Shared survival world</td></tr><tr><td>Known eras</td><td>3 recorded eras</td></tr><tr><td>Notable settlements</td><td><a href="#" data-go="builds">New Gurp City</a>, <a href="#" data-go="sakura">Sakura Sanctuary</a>, <a href="#" data-go="plaintiff">Plaintiff</a></td></tr><tr><td>Factions</td><td><a href="#" data-go="factions">Faction index</a></td></tr>
+  </table></div>
+  <p class="lead"><b>Homies | SMP</b> is a Minecraft survival multiplayer server whose history is marked by ambitious construction projects, expanding settlements, farms, faction-building, rivalries, and several memorable disasters. This page documents the server's history in three broad eras, alongside dedicated pages for its <a href="#" data-go="factions">factions</a>, <a href="#" data-go="builds">builds</a>, and locations.</p>
+  <div class="toc"><h3>Contents</h3><ol><li><a href="#early">Early history</a></li><li><a href="#preend-section">Pre-End Dimension Era</a></li><li><a href="#elytra-section">Age of Elytra</a></li><li><a href="#related">Related pages</a></li></ol></div>
+  <div class="notice">This wiki follows the event order supplied by the server's chronicle. Exact dates are shown only when known; undated events are not assigned invented dates.</div>
+  <h2 class="section" id="early">Early history — Early Days</h2>
+  <p>The server was created on August 11. Early activity centered on spawn, where the Bakery, the first enchantment area, “Pussy Cove”, and the “Cave” were established. The early period also saw the construction and destruction of the Bakery, TK's giant flaming T, and the beginning of Kaden's feud with the mountain surrounding spawn.</p>
+  <div class="timeline" id="history-before"></div>
+  <p>See the full <a href="#" data-go="before">Early Days article</a> for the complete list of recorded events.</p>
+  <h2 class="section" id="preend-section">Pre-End Dimension Era</h2>
+  <p>As the server expanded, settlements such as <a href="#" data-go="new-gurp">New Gurp City</a>, <a href="#" data-go="plaintiff">Plaintiff</a>, <a href="#" data-go="sakura">Sakura Sanctuary</a>, and <a href="#" data-go="tk-land">TK Land</a> emerged. Farms, roads, railways, and public infrastructure became increasingly important.</p>
+  <div class="timeline" id="history-preend"></div>
+  <p>See the full <a href="#" data-go="preend">Pre-End Dimension Era article</a>.</p>
+  <h2 class="section" id="elytra-section">Age of Elytra / Post-Enderdragon Fight</h2>
+  <p>The End dimension opened and the Ender Dragon was defeated, with three casualties recorded. Olin secured the server's first four elytras and the dragon egg. The following period brought new factions, large-scale construction, Nether travel infrastructure, and the incident at Abdiel's base that resulted in Kaden's in-world conviction and repayment obligation.</p>
+  <div class="timeline" id="history-elytra"></div>
+  <p>See the full <a href="#" data-go="elytra">Age of Elytra article</a>.</p>
+  <h2 class="section" id="related">Related pages</h2>
+  <div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="factions">Factions of Homies | SMP</a></h3><p>Political groups, settlements, founders, and faction history.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="builds">Builds and locations</a></h3><p>A directory of notable farms, monuments, infrastructure, and bases.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="new-gurp">New Gurp City</a></h3><p>A major settlement founded during the Pre-End era.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="sakura">Sakura Sanctuary</a></h3><p>A settlement known for its cherry river bridge and railway.</p></div>
   </div>
-  <section class="dashboard">
-    <div class="panel">
-      <div class="panel-heading"><span>Rarity tiers</span><span>Points</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--krillion)"></i>One in a Krillion</span><span class="tier-points">100</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--deep)"></i>Deep Cut</span><span class="tier-points">85</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--rare)"></i>Rare</span><span class="tier-points">60</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--schooler)"></i>Schooler</span><span class="tier-points">30</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--clever)"></i>Too Clever</span><span class="tier-points">15</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--plankton)"></i>Plankton</span><span class="tier-points">10</span></div>
-    </div>
-    <div class="panel">
-      <div class="panel-heading"><span>Discovered</span><span id="foundTotal">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--krillion)"></i>One in a Krillion</span><span class="tier-count" id="count-krillion">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--deep)"></i>Deep Cut</span><span class="tier-count" id="count-deep">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--rare)"></i>Rare</span><span class="tier-count" id="count-rare">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--schooler)"></i>Schooler</span><span class="tier-count" id="count-schooler">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--clever)"></i>Too Clever</span><span class="tier-count" id="count-clever">0</span></div>
-      <div class="tier"><span class="tier-name"><i class="tier-dot" style="background:var(--plankton)"></i>Plankton</span><span class="tier-count" id="count-plankton">0</span></div>
-      <div class="panel-heading" style="margin:16px 0 10px">Recent answers</div>
-      <div id="recent" class="recent"><div class="empty">No builds found yet.</div></div>
-    </div>
-  </section>
-  <div class="footer"><button class="reset" id="reset" type="button">Reset current answer</button></div>
+ </section>
+
+ <section class="page" id="before"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Early Days</h1><div class="subtitle">Historical era · 11 recorded events</div><p>The earliest known period of the server, beginning with its creation on August 11.</p><div class="timeline" id="list-before"></div></section>
+ <section class="page" id="preend"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Pre-End Dimension Era</h1><div class="subtitle">Historical era · 21 recorded events</div><p>A period of settlement growth, public works, automated farms, and the emergence of server-wide organization.</p><div class="timeline" id="list-preend"></div></section>
+ <section class="page" id="elytra"><a class="back" href="#" data-go="history">← Main history</a><h1 class="page-title">Age of Elytra / Post-Enderdragon Fight</h1><div class="subtitle">Historical era · 30 recorded events</div><p>The End opens, elytra travel changes exploration, and faction politics become more prominent.</p><div class="timeline" id="list-elytra"></div></section>
+
+ <section class="page" id="factions">
+  <h1 class="page-title">Factions of Homies | SMP</h1><div class="subtitle">Political and territorial organizations in the server</div>
+  <p class="lead">Factions are organized groups that claim an identity, territory, or shared political purpose in the Homies | SMP world. The following index records known founders and major developments.</p>
+  <table class="wikitable"><tr><th>Faction</th><th>Founder</th><th>Status / notes</th></tr>
+   <tr><td><a href="#" data-go="french-empire">French Empire</a></td><td>Kaden</td><td><span class="tag red">Abolished</span> Abolished after Jackson's terrorist attack on spawn.</td></tr>
+   <tr><td><a href="#" data-go="tk-land">TK Land</a></td><td>TK</td><td><span class="tag green">Founded</span> TK's faction and territory.</td></tr>
+   <tr><td><a href="#" data-go="israel">Israel</a></td><td>Logan</td><td><span class="tag green">Founded</span> Later associated with map art and the Israeli flag rampart.</td></tr>
+   <tr><td><a href="#" data-go="blood-iron">Blood and Iron</a></td><td>Erin</td><td><span class="tag green">Founded</span> Associated with the Pact of Blood and Iron.</td></tr>
+   <tr><td>Axis Powers</td><td>Not recorded</td><td>Founded during the Pre-End Dimension Era.</td></tr>
+   <tr><td>Purrssia-Mewthinia</td><td>Not recorded</td><td>Founded during the Age of Elytra.</td></tr>
+   <tr><td>Copper Guild</td><td>Not recorded</td><td>Founded during the Age of Elytra.</td></tr>
+  </table>
+  <div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="french-empire">French Empire</a></h3><p>Founded by Kaden; later abolished following the attack on spawn.</p><span class="tag red">Abolished</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="tk-land">TK Land</a></h3><p>Faction founded by TK.</p><span class="tag green">Founded</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="israel">Israel</a></h3><p>Faction founded by Logan, with map-art and rampart projects.</p><span class="tag green">Founded</span></div>
+   <div class="wiki-card"><h3><a href="#" data-go="blood-iron">Blood and Iron</a></h3><p>Faction founded by Erin; linked by name to the Pact of Blood and Iron.</p><span class="tag green">Founded</span></div>
+  </div>
+ </section>
+
+ <section class="page" id="builds">
+  <h1 class="page-title">Builds and locations</h1><div class="subtitle">Directory of notable construction and infrastructure</div>
+  <p class="lead">This directory is compiled from the recorded server history. It includes completed builds, farms, transport links, settlements, and projects whose construction or fate is specifically mentioned. Select an entry to open its article.</p>
+  <h2 class="section">Spawn and nearby landmarks</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="bakery">The Bakery</a></h3><p>Kaden's base and bakery; exploded by a trapped chest, rebuilt, and later burned down by lightning.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">Spawn enchantment area</a></h3><p>The first enchantment area created at spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">Pussy Cove and the Cave</a></h3><p>Two early spawn landmarks.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="spawn">TK's flaming T</a></h3><p>A giant flaming T erected near the early server period.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="statue">Statue of Dih</a></h3><p>A statue overlooking spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="goon-tower">The Goon Tower</a></h3><p>Kaden's house, erected during the Age of Elytra.</p></div>
+  </div>
+  <h2 class="section">Farms and utility builds</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Gold farm</a></h3><p>The server's first gold farm.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Raid farm</a></h3><p>Completed during the Pre-End era.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Olin's farm complex</a></h3><p>Sugar cane, iron, and creeper farms.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Shulker and trident farms</a></h3><p>Both completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="farms">Wool farm</a></h3><p>Completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="plaintiff">Plaintiff wheat farm</a></h3><p>A giant wheat farm built in Plaintiff.</p></div>
+  </div>
+  <h2 class="section">Settlements and transport</h2><div class="cardgrid">
+   <div class="wiki-card"><h3><a href="#" data-go="new-gurp">New Gurp City</a></h3><p>Founded with roads; later gained a jousting arena, spawn house, pond, trees, and paths.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="plaintiff">Plaintiff</a></h3><p>Settlement with a mob farm and a giant wheat farm.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="sakura">Sakura Sanctuary</a></h3><p>Settlement with a town hall, arch bridge, and railway headquarters.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="transport">NS Railway</a></h3><p>Railway connecting Sakura Sanctuary with Spawn.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="transport">Aarav-Erin Nether Highway</a></h3><p>Ice tunnels completed during the Age of Elytra.</p></div>
+   <div class="wiki-card"><h3><a href="#" data-go="mushroom">Aarav's mushroom island</a></h3><p>Colonized by Aarav; terraforming later began.</p></div>
+  </div>
+ </section>
+
+ <section class="page" id="about"><h1 class="page-title">About this wiki</h1><p class="lead">The Homies | SMP Wiki is an unofficial, community-maintained record of the server's history, factions, builds, and locations.</p><p>Pages are connected through internal links, like a traditional encyclopedia. Information is based on the chronology and details provided for this wiki. Unknown dates and unconfirmed founders are left unspecified rather than guessed.</p><div class="notice">Want to expand the archive? Add dates, player pages, screenshots, coordinates, and more event details as the server develops.</div></section>
+
+ <!-- Individual linked articles -->
+ <section class="page" id="french-empire"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">French Empire</h1><div class="subtitle">Faction · Founded by Kaden · Abolished</div><div class="infobox"><h3>French Empire</h3><div class="infopic">⚜️</div><table><tr><td>Founder</td><td>Kaden</td></tr><tr><td>Status</td><td><span class="tag red">Abolished</span></td></tr><tr><td>End</td><td>After Jackson's terrorist attack on spawn</td></tr></table></div><p class="lead">The <b>French Empire</b> was a faction founded by Kaden. It was later abolished after Jackson's terrorist attack on spawn.</p><h2 class="section">History</h2><p>The available server record identifies Kaden as the founder and records the faction's abolition following the attack on spawn. Further details, including its founding date, territory, members, and exact dissolution date, have not yet been documented.</p><div class="notice">This article records the event as described in the server chronicle; it does not add an unprovided date or further details about the attack.</div><h2 class="section">Related pages</h2><p><a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="history">Main history</a></p></section>
+ <section class="page" id="tk-land"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">TK Land</h1><div class="subtitle">Faction / territory · Founded by TK</div><div class="infobox"><h3>TK Land</h3><div class="infopic">🏰</div><table><tr><td>Founder</td><td>TK</td></tr><tr><td>Recorded</td><td>Pre-End era; faction founded in Age of Elytra</td></tr><tr><td>Associated project</td><td>Sakura Sanctuary / TK Land parties</td></tr></table></div><p class="lead"><b>TK Land</b> is a faction and territory founded by TK. TK Land is mentioned among the server's settlements and later appears as a formally founded faction during the Age of Elytra.</p><h2 class="section">History</h2><p>TK Land and Sakura Sanctuary are recorded as founded during the Pre-End Dimension Era. The TK Land faction is separately recorded as founded during the Age of Elytra. The server history also notes the creation of French, Israel, and TK Land parties.</p><p>See also: <a href="#" data-go="sakura">Sakura Sanctuary</a> · <a href="#" data-go="factions">Factions index</a>.</p></section>
+ <section class="page" id="israel"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">Israel</h1><div class="subtitle">Faction · Founded by Logan</div><div class="infobox"><h3>Israel</h3><div class="infopic">🛡️</div><table><tr><td>Founder</td><td>Logan</td></tr><tr><td>Recorded projects</td><td>Map art; Israeli flag rampart</td></tr><tr><td>Party</td><td>Israel party</td></tr></table></div><p class="lead"><b>Israel</b> is a faction founded by Logan during the Age of Elytra.</p><h2 class="section">History and projects</h2><p>The server chronicle records the completion of Israel map art and the eventual completion of an Israeli flag rampart. An Israel party is also recorded among the parties formed during this era.</p><p>See also: <a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="builds">Builds and locations</a>.</p></section>
+ <section class="page" id="blood-iron"><a class="back" href="#" data-go="factions">← Factions</a><h1 class="page-title">Blood and Iron</h1><div class="subtitle">Faction · Founded by Erin</div><div class="infobox"><h3>Blood and Iron</h3><div class="infopic">⚔️</div><table><tr><td>Founder</td><td>Erin</td></tr><tr><td>Related event</td><td>Pact of Blood and Iron formed</td></tr></table></div><p class="lead"><b>Blood and Iron</b> is a faction founded by Erin.</p><h2 class="section">History</h2><p>The Age of Elytra chronicle records the formation of the Pact of Blood and Iron. This wiki lists Blood and Iron as a faction founded by Erin, as specified in the faction record. The relationship between the faction and the pact can be expanded as more details become available.</p><p>See also: <a href="#" data-go="factions">Factions index</a> · <a href="#" data-go="history">Main history</a>.</p></section>
+
+ <section class="page" id="bakery"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">The Bakery</h1><div class="subtitle">Spawn landmark and Kaden's base</div><p class="lead">The <b>Bakery</b> was an early build at spawn and served as Kaden's base. Its history is notable for repeated destruction and reconstruction.</p><h2 class="section">History</h2><ul><li>The Bakery / Kaden's base was completed during the earliest server period.</li><li>It was blown up at spawn by a trapped chest.</li><li>Kaden rebuilt the Bakery.</li><li>It later burned down due to lightning.</li></ul><p>See also: <a href="#" data-go="before">Early Days</a> · <a href="#" data-go="spawn">Spawn landmarks</a>.</p></section>
+ <section class="page" id="spawn"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Spawn landmarks</h1><div class="subtitle">Central area · early server history</div><p class="lead">Spawn was the site of several of the server's earliest public builds and later underwent a major overhaul.</p><h2 class="section">Recorded landmarks</h2><ul><li>First enchantment area at spawn.</li><li>“Pussy Cove” and the “Cave”.</li><li>TK's giant flaming T.</li><li>Bakery / Kaden's base.</li><li>Statue of Dih overlooking spawn.</li><li>“Brick building” construction began at spawn.</li></ul><h2 class="section">Spawn overhaul</h2><p>During the Pre-End Dimension Era, an overhaul of spawn began. The surrounding mountain was excavated and buildings were removed. Kaden's long-running feud with the mountain had begun in the earliest period.</p></section>
+ <section class="page" id="statue"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Statue of Dih</h1><div class="subtitle">Monument · Overlooking Spawn</div><p class="lead">The Statue of Dih is a monument erected overlooking spawn during the Pre-End Dimension Era. Its builder and exact completion date are not recorded.</p><p>See also: <a href="#" data-go="spawn">Spawn landmarks</a>.</p></section>
+ <section class="page" id="goon-tower"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">The Goon Tower</h1><div class="subtitle">Residence · Kaden</div><p class="lead">The Goon Tower is the name given to Kaden's house, erected during the Age of Elytra.</p><p>See also: <a href="#" data-go="elytra">Age of Elytra</a> · <a href="#" data-go="builds">Builds index</a>.</p></section>
+ <section class="page" id="farms"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Farms of Homies | SMP</h1><div class="subtitle">Infrastructure directory</div><p class="lead">The server's farms provide resources and automation for its settlements and players.</p><table class="wikitable"><tr><th>Farm</th><th>Recorded detail</th><th>Era</th></tr><tr><td>First gold farm</td><td>First gold farm constructed</td><td>Pre-End</td></tr><tr><td>Raid farm</td><td>Completed</td><td>Pre-End</td></tr><tr><td>Olin's sugar cane farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Olin's iron farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Olin's creeper farm</td><td>Built by Olin</td><td>Pre-End</td></tr><tr><td>Shulker farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Wool farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Trident farm</td><td>Completed</td><td>Age of Elytra</td></tr><tr><td>Plaintiff wheat farm</td><td>Giant wheat farm completed</td><td>Pre-End</td></tr></table></section>
+ <section class="page" id="new-gurp"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">New Gurp City</h1><div class="subtitle">Settlement · Founded in the Pre-End Dimension Era</div><div class="infobox"><h3>New Gurp City</h3><div class="infopic">🏘️</div><table><tr><td>Founded</td><td>Pre-End Dimension Era</td></tr><tr><td>Known features</td><td>Roads, jousting arena, spawn house, pond, trees, paths</td></tr></table></div><p class="lead"><b>New Gurp City</b> is a settlement officially founded during the Pre-End Dimension Era, when its roads were laid.</p><h2 class="section">Development</h2><p>The city later completed a jousting arena. During the Age of Elytra, its spawn house was finished and the city gained a pond, trees, paths, and other additions.</p></section>
+ <section class="page" id="plaintiff"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Plaintiff</h1><div class="subtitle">Settlement · Founded in the Pre-End Dimension Era</div><p class="lead"><b>Plaintiff</b> was officially founded during the Pre-End Dimension Era. Jackson's mob farm was completed there before it was later torn down.</p><h2 class="section">Recorded developments</h2><ul><li>Jackson's mob farm completed.</li><li>Jackson's mob farm torn down.</li><li>The giant wheat farm completed.</li><li>Bradly moved out of Plaintiff following the stripped oak log incident.</li></ul></section>
+ <section class="page" id="sakura"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Sakura Sanctuary</h1><div class="subtitle">Settlement · Cherry river region</div><div class="infobox"><h3>Sakura Sanctuary</h3><div class="infopic">🌸</div><table><tr><td>Founded</td><td>Pre-End Dimension Era</td></tr><tr><td>Known builds</td><td>Arch bridge, town hall, railway headquarters</td></tr></table></div><p class="lead"><b>Sakura Sanctuary</b> is a settlement founded during the Pre-End Dimension Era alongside TK Land.</p><h2 class="section">Development</h2><p>Notable projects include the Sakura arch bridge over the cherry river, its town hall, and the Sakura Sanctuary Railroad headquarters. The NS Railway connected Sakura Sanctuary with Spawn.</p></section>
+ <section class="page" id="transport"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Transport infrastructure</h1><div class="subtitle">Railways and Nether highways</div><h2 class="section">NS Railway</h2><p>The NS Railway was completed during the Pre-End Dimension Era, connecting Sakura Sanctuary with Spawn.</p><h2 class="section">Aarav-Erin Nether Highway</h2><p>The Aarav-Erin Nether Highway's ice tunnels were completed during the Age of Elytra.</p><h2 class="section">Sakura Sanctuary Railroad headquarters</h2><p>The railroad headquarters was completed during the Age of Elytra.</p></section>
+ <section class="page" id="mushroom"><a class="back" href="#" data-go="builds">← Builds</a><h1 class="page-title">Aarav's mushroom island</h1><div class="subtitle">Island settlement and terraforming project</div><p class="lead">Aarav colonized a mushroom island during the Age of Elytra. Terraforming on the island began later in the same era.</p><p>See also: <a href="#" data-go="elytra">Age of Elytra</a>.</p></section>
+ <section class="page" id="players">
+  <h1 class="page-title">Players</h1><div class="subtitle">Player directory · Individual player pages and achievements</div>
+  <p class="lead">Browse the players shown in the supplied server member lists. Select a username to open their page. Achievement records can be added as players complete monthly challenges.</p>
+  <div id="playerDirectory"></div>
+  <p class="muted">Some usernames were clipped in the screenshots and are shown with an ellipsis where the full name was not visible. The Reaction Roles app/bot is not listed as a player.</p>
+ </section>
+ <section class="page" id="achievements">
+  <h1 class="page-title">Achievements</h1><div class="subtitle">Monthly challenges · Homies | SMP</div>
+  <p class="lead">Monthly challenges give players a goal to complete and a way to earn a visible achievement on their player page.</p>
+  <div class="challenge-card"><h2 class="section" style="margin-top:0">November 2026 Challenge</h2><h3>Get a mace</h3><p>Submit a picture in <b>#submissions</b> in the Discord server to get the achievement added to your player page on the Homies SMP website.</p><img src="homies_smp_assets/november-2026-challenge.png" alt="November 2026 challenge graphic: Get a mace"></div>
+  <h2 class="section">How achievements are recorded</h2><ol><li>Complete the monthly challenge.</li><li>Submit proof in the Discord <b>#submissions</b> channel.</li><li>Once verified, add the achievement to the player's page under their Achievements dropdown.</li></ol>
+  <p><a href="#" data-go="players">Browse player pages</a>.</p>
+ </section>
+ <div class="footer"><span>Homies | SMP Wiki</span><span>Last structured from the supplied server chronicle</span></div>
 </main>
+</div>
 <script>
-const tiers = {
-  "One in a Krillion": { key:"one-in-a-krillion", points:100, color:"#ffd36a" },
-  "Deep Cut": { key:"deep-cut", points:85, color:"#f18cce" },
-  "Rare": { key:"rare", points:60, color:"#bd91ff" },
-  "Schooler": { key:"schooler", points:30, color:"#74b8ff" },
-  "Too Clever": { key:"too-clever", points:15, color:"#5ce0d2" },
-  "Plankton": { key:"plankton", points:10, color:"#a7b8c4" }
+const data={
+before:[
+["Server created","August 11"],["Bakery / Kaden’s base finished"],["First enchantment area created at spawn"],["“Pussy Cove” finished at spawn"],["“Cave” finished at spawn"],["TK’s giant flaming T is erected"],["Bakery exploded at spawn by a trapped chest"],["Bakery rebuilt by Kaden"],["Bakery burned down by lightning"],["Ricardo kills Pedro (Kaden’s dog)"],["Kaden’s beef with the giant mountain surrounding spawn starts — he wants to destroy the mountain"]
+],
+preend:[
+["Statue of Dih overlooking spawn is erected"],["Abdiel’s base burnt down by Logan, due to constant killing"],["New Gurp City officially founded; roads are laid"],["Plaintiff officially founded; Jackson’s mob farm complete"],["Jackson’s mob farm torn down"],["First gold farm constructed"],["Skulkbone Yards / Eggland founded"],["Villager trade hall is completed"],["“Brick building” begins construction at spawn"],["The Plaintiff giant wheat farm is completed"],["TK Land and Sakura Sanctuary founded"],["Raid farm completed"],["First server-wide event is held: mini game competition"],["Overhaul of spawn; mountain excavation begins and buildings are removed"],["Bradly moves out of Plaintiff (stripped oak log incident)"],["New Gurp City jousting arena is completed"],["NS Railway is completed, connecting Sakura Sanctuary with Spawn"],["“Parker likes dih” sign constructed"],["Erin’s base in the desert is created"],["Olin builds sugar cane farm, iron farm, and creeper farm"],["Axis Powers founded"]
+],
+elytra:[
+["End dimension opens; Ender Dragon fight (3 casualties)"],["Olin secures the server’s first 4 elytras (and dragon egg)"],["Sakura arch bridge built over the cherry river"],["Warden machine finished; attacks south side of spawn"],["Shulker farm completed"],["New Gurp City spawn house finished"],["Bradley’s mansion completed"],["Aarav colonizes mushroom island"],["Server updates to 26.3"],["Purrssia-Mewthinia founded"],["Copper Guild founded"],["Wool farm is complete"],["TK Land faction founded"],["Israel faction formed"],["Abdiel founds Cartethyia Cosmopolis in the mesa"],["Mount Logan, tallest in the server, is summited"],["Trident farm completed"],["Terraforming begins on Aarav’s mushroom island"],["Sakura Sanctuary town hall is constructed"],["Aarav-Erin Nether Highway ice tunnels completed"],["Israel map art finished"],["Abdiel finishes water tower and starts building Bank trading hall"],["New Gurp City adds pond, trees, paths, and more"],["Kaden’s house is erected (the Goon Tower)"],["Kaden is officially getting sued after an incident under Abdiel’s base destroys his elytras and loot in a self-sabotage explosion"],["French, Israel, and TK Land parties created"],["Sakura Sanctuary Railroad headquarters finished"],["Israeli flag rampart finally completed"],["Pact of Blood and Iron formed"],["Kaden is charged guilty for domestic terrorism at Abdiel’s base; must repay with 2 elytras"]
+]};
+const eventImages={
+'before-3':['homies_smp_assets/pussy-cove.png','Pussy Cove at spawn'],
+'before-4':['homies_smp_assets/cave-bakery.png','The Cave and Bakery at spawn'],
+'before-6':['homies_smp_assets/bakery-explosion.png','The trapped chest associated with the Bakery explosion'],
+'before-9':['homies_smp_assets/pedro.png','Pedro, Kaden’s dog'],
+'before-10':['homies_smp_assets/mountain-feud.png','The mountain surrounding spawn, where Kaden’s feud began'],
+'preend-17':['homies_smp_assets/parker-likes-dih.png','The “Parker likes dih” sign and dirt statue'],
+'preend-14':['homies_smp_assets/bradleys-base.png','Bradley’s base in the early days'],
+'elytra-23':['homies_smp_assets/goon-tower.png','The Goon Tower']
 };
+function eventPageId(key,i){return `event-${key}-${i}`}
+function addEvents(id,key,limit){const root=document.getElementById(id);const entries=limit?data[key].slice(0,limit):data[key];entries.forEach((item,i)=>{const el=document.createElement("div");el.className="event";const date=item[1]?`<span class="date">${item[1]}</span>`:"";el.innerHTML=`<a class="event-link" href="#" data-go="${eventPageId(key,i)}"><strong>${String(i+1).padStart(2,"0")}. ${escapeHtml(item[0])}</strong>${date}</a>`;root.appendChild(el)})}
+function createEventPages(){const main=document.querySelector('main');Object.entries(data).forEach(([era,events])=>events.forEach((item,i)=>{const id=eventPageId(era,i);const page=document.createElement('section');page.className='page event-article';page.id=id;const title=item[0];const img=eventImages[`${era}-${i}`];const eraName=era==='before'?'Early Days':era==='preend'?'Pre-End Dimension Era':'Age of Elytra';let content=`<a class="back" href="#" data-go="${era}">← ${eraName}</a><h1 class="page-title">${escapeHtml(title)}</h1><div class="subtitle">${eraName} · Event ${i+1} of ${events.length}${item[1]?' · '+escapeHtml(item[1]):''}</div><p class="lead">This page records the event “${escapeHtml(title)}” in the history of Homies | SMP.</p>`;if(img){content+=`<figure style="margin:14px 0 20px"><img class="article-image" src="${img[0]}" alt="${escapeHtml(img[1])}"><figcaption class="image-caption">${escapeHtml(img[1])}</figcaption></figure>`}content+=`<h2 class="section">Context</h2><p>This event is part of the ${eraName} chronology. It is preserved here as an individual entry so it can be linked, searched, and expanded with more details as the server history grows.</p><p>See also: <a href="#" data-go="history">Main history</a> · <a href="#" data-go="${era}">${eraName}</a>.</p>`;page.innerHTML=content;main.insertBefore(page,document.querySelector('.footer'))}));}
+createEventPages();
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+addEvents("history-before","before",6);addEvents("history-preend","preend",7);addEvents("history-elytra","elytra",8);
+addEvents("list-before","before");addEvents("list-preend","preend");addEvents("list-elytra","elytra");
+function go(id){const target=document.getElementById(id);if(!target)return;document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));target.classList.add("active");document.querySelectorAll("[data-go]").forEach(b=>b.classList.toggle("active",b.dataset.go===id));document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.go===id));document.getElementById("searchResults").classList.remove("show");document.getElementById("globalSearch").value="";window.scrollTo({top:0,behavior:"smooth"})}
+document.addEventListener("click",e=>{const a=e.target.closest("[data-go]");if(a){e.preventDefault();go(a.dataset.go)}});
+const pages=[["Main history","history"],["Factions","factions"],["Builds and locations","builds"],["Early Days","before"],["Pre-End Dimension Era","preend"],["Age of Elytra","elytra"],["French Empire","french-empire"],["TK Land","tk-land"],["Israel","israel"],["Blood and Iron","blood-iron"],["The Bakery","bakery"],["Spawn landmarks","spawn"],["Statue of Dih","statue"],["The Goon Tower","goon-tower"],["Farms of Homies | SMP","farms"],["New Gurp City","new-gurp"],["Plaintiff","plaintiff"],["Sakura Sanctuary","sakura"],["Transport infrastructure","transport"],["Aarav's mushroom island","mushroom"],["About this wiki","about"]];
+data.before.forEach((item,i)=>pages.push([item[0],eventPageId("before",i)]));data.preend.forEach((item,i)=>pages.push([item[0],eventPageId("preend",i)]));data.elytra.forEach((item,i)=>pages.push([item[0],eventPageId("elytra",i)]));
+const search=document.getElementById("globalSearch"),results=document.getElementById("searchResults");
+search.addEventListener("input",()=>{const q=search.value.trim().toLowerCase();if(!q){results.classList.remove("show");results.innerHTML="";return}const found=pages.filter(p=>p[0].toLowerCase().includes(q));results.innerHTML=found.length?found.map(p=>`<a href="#" data-go="${p[1]}">${p[0]}</a>`).join(""):"<span class='muted'>No matching wiki pages found.</span>";results.classList.add("show")});
 
-// Canonical build names plus the ways players might shorten, misspell, or remember them.
-const builds = [
-  {name:"The Blacksmith (at spawn)",rarity:"One in a Krillion",aliases:["blacksmith","black smith","spawn blacksmith","blacksmith at spawn","smith at spawn","smithy"]},
-  {name:"Bradleys Island Base",rarity:"Deep Cut",aliases:["bradley island base","bradleys island","bradley island","bradley base","bradleys base","island base","bradleys island bace","bradlys island base"]},
-  {name:"The Water Tower",rarity:"Deep Cut",aliases:["water tower","watertower","tower water","water tank","the tower","water towr","woter tower"]},
-  {name:"Patricks House",rarity:"Deep Cut",aliases:["patrick house","patrick's house","patricks home","patrick home","pat house","patricks hous"]},
-  {name:"Olins Hungry Hippos but Pigs",rarity:"Deep Cut",aliases:["olins hungry hippos","olin hungry hippos","hungry hippos pigs","hungry hippos but pigs","olins pigs","olin pigs","pigs hippos","olins base","olin base","oaldn bafe","oaldn base","olden bafe","olins bafe","oaldn bafe but pig","oaldn bafe pig","olins base pigs","olins hungry hippos but pig","hungry hippo pigs","hippos but pigs","olin build"]},
-  {name:"Bradleys House",rarity:"Rare",aliases:["bradley house","bradleys home","bradley home","house bradley","bradleys hous","bradlys house"]},
-  {name:"Bakery",rarity:"Rare",aliases:["bakerie","bake shop","bread shop","bread place","the bakery","bakry","bakey"]},
-  {name:"The Bank",rarity:"Rare",aliases:["bank","the bank","banks","bank build"]},
-  {name:"Aaravs Island",rarity:"Schooler",aliases:["aarav island","aaravs islnd","aaravs iland","aravs island","aaravs","aarav island base","island aarav"]},
-  {name:"Logans House",rarity:"Schooler",aliases:["logan house","logans hous","logans home","logan home","logans","logans base","logans hous"]},
-  {name:"Elytra Course",rarity:"Schooler",aliases:["elytra","elytra corse","elytra cours","elytra course","elytra parkour","elytra flying course","flight course","elyta course"]},
-  {name:"Sakura Trainstation",rarity:"Schooler",aliases:["sakura train station","sakura station","sakura trainstaton","sakura trainstatoin","sakura","trainstation sakura","train station sakura","sakura railway"]},
-  {name:"Huis Junker",rarity:"Too Clever",aliases:["huis","huis junker","hous junker","house junker","huisjunker","huyis junker"]},
-  {name:"Jousting Arena",rarity:"Too Clever",aliases:["joust arena","jousting","arena","the arena","jousting arna","jousting area"]},
-  {name:"Goon Tower",rarity:"Plankton",aliases:["goontower","goon","goon base","goon towre","goon towr"]},
-  {name:"Spawn House",rarity:"Plankton",aliases:["spawnhouse","spawn home","starter house","house at spawn","spawn base","spwn hous","spawn hous"]}
+const playerGroups=[
+ {group:'Players',names:['bigdoof','Blast','BoganOfWater','breaded','dabegelman','fisch','Gimphehe83D','GAMZKNIGHT','InfinitePower','JeffBozo','Kushal','Olesky','papa lu','Peter Griffin','sakura','SpeedWagon','Sunbeamed','Tank Man','TrackerPork','Mongonija','t_o7','Duck','doodle','omegapanda.','DeflatedDuck','Joe Hamms','lolbit187','PigeonDs','Skyknightgami…','Turtle','afternoonbaseball2010','Amish.','AstroBoar','Axologius Maxim…','ballbuster99']}
 ];
+pages.push(["Players","players"],["Achievements","achievements"],["November 2026 Challenge — Get a mace","achievements"]);playerGroups.forEach(g=>g.names.forEach(n=>pages.push([n,slugPlayer(n)])));
+function slugPlayer(name){return 'player-'+name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g)}
+const playerDirectory=document.getElementById('playerDirectory');
+playerGroups.forEach(group=>{const h=document.createElement('h2');h.className='section';h.textContent=group.group;playerDirectory.appendChild(h);const grid=document.createElement('div');grid.className='player-grid';group.names.forEach(name=>{const card=document.createElement('div');card.className='player-card';card.innerHTML=`<a href="#" data-go="${slugPlayer(name)}">${escapeHtml(name)}</a><div class="player-meta">Homies | SMP player</div>`;grid.appendChild(card)});playerDirectory.appendChild(grid)});
+playerGroups.forEach(group=>group.names.forEach(name=>{const id=slugPlayer(name);if(document.getElementById(id))return;const page=document.createElement('section');page.className='page';page.id=id;page.innerHTML=`<a class="back" href="#" data-go="players">← Players</a><h1 class="page-title">${escapeHtml(name)}</h1><div class="subtitle">Homies | SMP player profile</div><p class="lead">This is the player page for <b>${escapeHtml(name)}</b>. Their server achievements will be listed here as they are earned and verified.</p><details class="player-details"><summary>Achievements</summary><p><a class="achievement-link" href="#" data-go="achievements">View monthly challenges and achievements →</a></p><p class="muted">No achievements have been recorded for this player yet.</p></details><h2 class="section">Monthly challenge history</h2><p><a href="#" data-go="achievements">November 2026 Challenge — Get a mace</a></p><p class="muted">Completion has not been confirmed for this player.</p>`;document.querySelector('main').insertBefore(page,document.querySelector('.footer'))}));
 
-const normalize = value => value.toLocaleLowerCase("en").normalize("NFD")
-  .replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"")
-  .replace(/[^a-z0-9]+/g," ").trim().replace(/\s+/g," ");
-const STOP_WORDS = new Set(["the","at","but","and","a","an","on","in","of","its","is"]);
-const words = value => normalize(value).split(" ").filter(word => word && !STOP_WORDS.has(word));
-
-// Damerau-Levenshtein catches ordinary typos AND adjacent swapped letters.
-function editDistance(a,b){
-  const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
-  for(let i=0;i<=a.length;i++)d[i][0]=i;
-  for(let j=0;j<=b.length;j++)d[0][j]=j;
-  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
-    const cost=a[i-1]===b[j-1]?0:1;
-    d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+cost);
-    if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
-  }
-  return d[a.length][b.length];
-}
-function soundKey(word){
-  const s=word.toLowerCase().replace(/[^a-z]/g,""); if(!s)return "";
-  const groups={b:1,f:1,p:1,v:1,c:2,g:2,j:2,k:2,q:2,s:2,x:2,z:2,d:3,t:3,l:4,m:5,n:5,r:6};
-  let out=s[0].toUpperCase(),last=groups[s[0]]||0;
-  for(let i=1;i<s.length&&out.length<4;i++){const code=groups[s[i]]||0;if(code&&code!==last)out+=code;last=code;}
-  return (out+"000").slice(0,4);
-}
-function tokenScore(a,b){
-  if(a===b)return 1;
-  if(Math.min(a.length,b.length)>=3&&(a.startsWith(b)||b.startsWith(a)))return .94;
-  const dist=editDistance(a,b),long=Math.max(a.length,b.length),ratio=1-dist/long;
-  const allowed=long<=4?1:long<=7?2:3;
-  if(dist<=allowed&&ratio>=.55)return Math.max(.58,ratio);
-  if(a.length>=4&&b.length>=4&&soundKey(a)===soundKey(b))return .84;
-  return 0;
-}
-function variantScore(query,variant){
-  const qw=words(query),vw=words(variant);if(!qw.length||!vw.length)return 0;
-  // Compare every typed word with its best available target token; this allows omitted words.
-  let sum=0,matched=0;
-  const taken=new Set();
-  for(const q of qw){
-    let best=0,index=-1;
-    vw.forEach((v,i)=>{if(taken.has(i))return;const s=tokenScore(q,v);if(s>best){best=s;index=i;}});
-    if(best>=.55){sum+=best;matched++;taken.add(index);}
-  }
-  if(!matched)return 0;
-  const coverage=sum/qw.length;
-  const evidence=Math.min(matched,3)/Math.min(vw.length,3);
-  // Prioritize whether the player's words were understood, not whether they typed every word.
-  return coverage*.88+evidence*.12;
-}
-function rankMatches(raw){
-  const query=normalize(raw);if(!query)return [];
-  return builds.map(build=>{
-    let score=0,exact=false;
-    for(const variant of [build.name,...build.aliases]){
-      const v=normalize(variant);
-      if(query===v){score=1;exact=true;break;}
-      score=Math.max(score,variantScore(query,v));
-    }
-    return {build,score,exact};
-  }).sort((a,b)=>b.score-a.score);
-}
-function bestMatch(raw){
-  const ranked=rankMatches(raw);if(!ranked.length||ranked[0].score<.57)return null;
-  if(ranked[0].exact)return ranked[0];
-  const second=ranked[1];
-  // For a very short vague word (e.g. "house"), ask for more detail rather than guessing.
-  const queryWords=words(raw);
-  if(queryWords.join("").length<5)return null;
-  if(second&&ranked[0].score-second.score<.075)return null;
-  return ranked[0].score>=.66?ranked[0]:null;
-}
-
-const counts=Object.fromEntries(Object.values(tiers).map(t=>[t.key,0]));
-let totalPoints=0,history=[],rollingTimer=null,rollingInterval=null,locked=false;
-const answerInput=document.getElementById("answer"),assist=document.getElementById("assist"),result=document.getElementById("result"),submitButton=document.getElementById("submitButton");
-const countIds={"one-in-a-krillion":"krillion","deep-cut":"deep","rare":"rare","schooler":"schooler","too-clever":"clever","plankton":"plankton"};
-function setAssist(text,type=""){assist.textContent=text;assist.className="assist"+(type?" "+type:"");}
-function liveAutocorrect(){
-  const raw=answerInput.value.trim();
-  if(!raw){setAssist("AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.");return;}
-  const match=bestMatch(raw);
-  if(match){
-    const changed=normalize(raw)!==normalize(match.build.name);
-    setAssist(changed?`AUTO-CORRECT: “${raw}” → ${match.build.name}`:`Recognized: ${match.build.name}`,"success");
-  }else{
-    const ranked=rankMatches(raw);
-    if(ranked[0]&&ranked[0].score>=.48)setAssist(`Almost got it — best match is ${ranked[0].build.name}. Add one more word if that's not it.`);
-    else setAssist("Auto-correct is listening. You can leave out words and make spelling mistakes.");
-  }
-}
-function particles(color){
-  const holder=document.getElementById("particles");holder.replaceChildren();
-  for(let i=0;i<22;i++){
-    const p=document.createElement("i");p.className="particle";
-    p.style.setProperty("--x",(12+Math.random()*76)+"%");p.style.setProperty("--dx",(Math.random()*260-130)+"px");p.style.setProperty("--dy",(-45-Math.random()*150)+"px");p.style.setProperty("--c",color);holder.append(p);
-  }
-  setTimeout(()=>holder.replaceChildren(),1000);
-}
-function showFinal(build,original){
-  const tier=tiers[build.rarity],corrected=normalize(original)!==normalize(build.name);
-  result.className="result show "+tier.key;
-  document.getElementById("resultLabel").textContent="BUILD DISCOVERED";
-  document.getElementById("resultRarity").textContent=build.rarity;
-  document.getElementById("resultRarity").style.color=tier.color;
-  document.getElementById("resultBuild").textContent=build.name;
-  document.getElementById("resultMeta").textContent=`+${tier.points} points · +${(tier.points*10).toLocaleString()} m`+(corrected?` · Auto-corrected “${original}”`:"");
-  document.getElementById("fakeout").hidden=build.rarity!=="Too Clever";
-  document.getElementById("rollTrack").hidden=true;
-  if(["Rare","Deep Cut","One in a Krillion"].includes(build.rarity))particles(tier.color);
-  counts[tier.key]++;totalPoints+=tier.points;
-  history.unshift({name:build.name,rarity:build.rarity,key:tier.key,points:tier.points});history=history.slice(0,30);
-  renderStats();
-  setAssist(corrected?`AUTO-CORRECTED TO: ${build.name}`:"Exact build recognized!","success");
-  answerInput.value=build.name;
-  locked=false;submitButton.disabled=false;submitButton.textContent="LOCK IN ↗";
-}
-function startRoll(build,original){
-  if(locked)return;locked=true;submitButton.disabled=true;submitButton.textContent="ROLLING...";
-  const labels=Object.keys(tiers),start=Date.now(),duration=1450;
-  result.className="result show rolling";
-  document.getElementById("resultLabel").textContent="SEARCHING THE DEPTHS";
-  document.getElementById("fakeout").hidden=true;
-  document.getElementById("rollTrack").hidden=false;
-  const spin=()=>{
-    const randomBuild=builds[Math.floor(Math.random()*builds.length)];
-    const randomTier=labels[Math.floor(Math.random()*labels.length)];
-    document.getElementById("resultRarity").textContent=randomTier;
-    document.getElementById("resultRarity").style.color=tiers[randomTier].color;
-    document.getElementById("resultBuild").textContent=randomBuild.name;
-    document.getElementById("resultMeta").textContent="Matching your answer...";
-  };
-  spin();rollingInterval=setInterval(spin,85);
-  rollingTimer=setTimeout(()=>{
-    clearInterval(rollingInterval);rollingInterval=null;rollingTimer=null;showFinal(build,original);
-  },duration);
-}
-function renderStats(){
-  document.getElementById("depthValue").textContent=(totalPoints*10).toLocaleString()+" m";
-  document.getElementById("foundTotal").textContent=history.length;
-  Object.values(tiers).forEach(t=>{const el=document.getElementById("count-"+countIds[t.key]);if(el)el.textContent=counts[t.key];});
-  const recent=document.getElementById("recent");recent.replaceChildren();
-  if(!history.length){const e=document.createElement("div");e.className="empty";e.textContent="No builds found yet.";recent.append(e);return;}
-  history.slice(0,5).forEach(item=>{const row=document.createElement("div");row.className="recent-row";const name=document.createElement("strong");name.textContent=item.name;const label=document.createElement("span");label.textContent=item.rarity+" · "+item.points;label.style.color=tiers[item.rarity].color;row.append(name,label);recent.append(row);});
-}
-document.getElementById("answerForm").addEventListener("submit",event=>{
-  event.preventDefault();if(locked)return;
-  const raw=answerInput.value.trim();if(!raw){setAssist("Type a build name first.","error");answerInput.focus();return;}
-  const match=bestMatch(raw);
-  if(match){startRoll(match.build,raw);return;}
-  const ranked=rankMatches(raw);
-  if(ranked[0]&&ranked[0].score>=.48){
-    setAssist(`I think you mean ${ranked[0].build.name}, but that guess is a little ambiguous. Type one more clue and I'll auto-correct it.`,"");
-  }else{
-    setAssist("Couldn't recognize that one yet. Try a shorter nickname, another spelling, or one more word.","error");
-  }
-  result.className="result show";document.getElementById("resultLabel").textContent="NO MATCH YET";document.getElementById("resultRarity").textContent="???";document.getElementById("resultRarity").style.color="#91a9b7";document.getElementById("resultBuild").textContent="Keep trying — auto-correct is on";document.getElementById("resultMeta").textContent="Nothing was added to your discoveries.";document.getElementById("fakeout").hidden=true;document.getElementById("rollTrack").hidden=true;
-});
-answerInput.addEventListener("input",liveAutocorrect);
-document.getElementById("reset").addEventListener("click",()=>{
-  if(rollingTimer)clearTimeout(rollingTimer);if(rollingInterval)clearInterval(rollingInterval);rollingTimer=null;rollingInterval=null;locked=false;submitButton.disabled=false;submitButton.textContent="LOCK IN ↗";
-  answerInput.value="";result.className="result";document.getElementById("particles").replaceChildren();document.getElementById("rollTrack").hidden=true;setAssist("AUTO-CORRECT ON · Try rough spellings, shortened names, or missing words.");answerInput.focus();
-});
-renderStats();
 </script>
-</body>
-</html>
+</body></html>
